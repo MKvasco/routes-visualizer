@@ -1,0 +1,66 @@
+.registerForm--formContainer {
+  max-width: inherit;
+  border: 1px solid lightgrey;
+  box-shadow: 3px 5px 10px 01px rgba(0, 0, 0, 0.747);
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+}
+
+.registerForm--formContainer h1 {
+  font-weight: 500;
+  font-size: 36px;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.registerForm--registerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1.75rem auto 0 auto;
+}
+
+.registerForm--registerContainer input,
+.registerForm--registerContainer button {
+  width: 70%;
+  padding: 0.6rem 1rem;
+  margin: 0.4rem;
+  font-size: 18px;
+  border: 0.5px solid lightgrey;
+  border-radius: 0.25rem;
+}
+
+.registerForm--registerContainer button {
+  background-color: var(--green);
+  color: white;
+}
+.registerForm--registerContainer button:hover {
+  background-color: var(--dark-green);
+  cursor: pointer;
+}
+
+.registerForm--registerContainer button::after {
+  pointer-events: none;
+  content: "";
+  width: 110%;
+  height: 1px;
+  background-color: lightgrey;
+  display: block;
+  position: relative;
+  left: -5%;
+  bottom: -50px;
+}
+
+.registerForm--registerContainer p {
+  margin: 4.5rem 0.25rem 3rem 0.25rem;
+  font-size: 16px;
+}
+
+.registerForm--registerContainer p > a {
+  color: var(--blue);
+}
+.registerForm--registerContainer p > a:hover {
+  cursor: pointer;
+  color: var(--dark-blue);
+}

@@ -1,0 +1,43 @@
+from rest_framework import serializers
+
+from .models import FileModel, RouteModel, UserModel
+
+###### Serializers
+
+class BaseSerializer(serializers.ModelSerializer):
+  def __init__(self, *args, **kwargs):
+    fields = kwargs.pop('fields', None)
+    super().__init__(*args, **kwargs)
+
+    if fields is not None:
+        allowed = set(fields)
+        existing = set(self.fields)
+        for field_name in existing - allowed:
+            self.fields.pop(field_name)
+
+class UserSerializer(BaseSerializer):
+  class Meta:
+    model = UserModel
+    fields = ['id', 'name', 'email', 'password']
+    extra_kwargs = {
+      'password': { 'write_only': True }
+    }
+
+  def create(self, validated_data):
+    password = validated_data.pop('password', None)
+    instance = self.Meta.model(**validated_data)
+    if password is not None:
+      instance.set_password(password)
+    instance.save()
+    return instance
+
+class FileSerializer(BaseSerializer):
+  class Meta:
+    model = FileModel
+    fields = '__all__'
+
+class RouteSerializer(BaseSerializer):
+  class Meta:
+    model = RouteModel
+    fields = '__all__'
+  

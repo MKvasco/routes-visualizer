@@ -1,0 +1,73 @@
+.loginForm--formContainer {
+  max-width: inherit;
+  border: 1px solid lightgrey;
+  box-shadow: 3px 5px 10px 01px rgba(0, 0, 0, 0.747);
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+}
+
+.loginForm--loginContainer,
+.loginForm--registerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 4rem auto 0 auto;
+}
+
+.loginForm--loginContainer input,
+.loginForm--loginContainer button {
+  width: 70%;
+  padding: 0.6rem 1rem;
+  margin: 0.4rem;
+  font-size: 18px;
+  border: 0.5px solid lightgrey;
+  border-radius: 0.25rem;
+}
+
+.loginForm--loginContainer button {
+  background-color: var(--blue);
+  color: white;
+}
+
+.loginForm--loginContainer button:hover {
+  background-color: var(--dark-blue);
+  cursor: pointer;
+}
+
+.loginForm--loginContainer button::after {
+  pointer-events: none;
+  content: "";
+  width: 110%;
+  height: 1px;
+  background-color: lightgrey;
+  display: block;
+  position: relative;
+  left: -5%;
+  bottom: -50px;
+}
+
+.loginForm--registerContainer p {
+  margin: 1rem 0.25rem 0.25rem 0.25rem;
+  font-size: 18px;
+}
+
+.loginForm--registerContainer {
+  margin: 3.5rem auto 3rem auto;
+}
+
+.loginForm--registerContainer button {
+  background-color: var(--green);
+  color: white;
+  margin: 0.3rem;
+  padding: 0.6rem 1rem;
+  width: 47.5%;
+  font-size: 18px;
+  border: 0.5px solid lightgrey;
+  border-radius: 0.25rem;
+}
+
+.loginForm--registerContainer button:hover {
+  background-color: var(--dark-green);
+  cursor: pointer;
+}

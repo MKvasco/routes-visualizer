@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  server:
+    container_name: ${PROJECT_NAME}_server
+    build: ./db
+    image: mkvasco/${IMAGE_NAME}-server
+    restart: always
+    command: 
+      - run
+    volumes:
+      - osm-data:/data/database/
+      - osm-tiles:/data/tiles/
+    ports: 
+      - 8080:80
+      - 5432:5432
+    env_file:
+      - .env
+    networks:
+      - local_network
+    
+  web:
+    container_name: ${PROJECT_NAME}_web
+    build: ./tourist_archive
+    image: mkvasco/${IMAGE_NAME}-web
+    command: sh run_django.sh
+    volumes:
+      - ./tourist_archive:/app/
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    networks:
+      - local_network
+    depends_on:
+      - server
+
+networks:
+  local_network:
+    driver: bridge
+    name: tourist_archive_network
+
+volumes:
+  osm-data:
+    external: true
+  osm-tiles:
+    external: true

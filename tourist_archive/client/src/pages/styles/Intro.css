@@ -1,0 +1,19 @@
+body {
+  background: url("../../../static/images/background_intro_image.jpg") no-repeat
+    center center fixed;
+  background-size: cover;
+}
+
+.loginFormContainer {
+  width: 400px;
+  position: absolute;
+  right: 10%;
+  top: 15%;
+}
+
+.registerFormContainer {
+  width: 400px;
+  position: absolute;
+  left: 10%;
+  top: 15%;
+}
