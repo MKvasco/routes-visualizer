@@ -1,6 +1,11 @@
+import django.contrib.auth.password_validation as validators
+from django.core import exceptions
 from rest_framework import serializers
 
-from .models import FileModel, RouteModel, UserModel
+from .models import UserModel
+from .models import FileModel
+from .models import RouteBaseModel
+from .models import RouteModel
 
 ###### Serializers
 
@@ -23,6 +28,20 @@ class UserSerializer(BaseSerializer):
       'password': { 'write_only': True }
     }
 
+  def validate(self, data):
+    user = UserModel(**data)
+    password = data.get('password')
+    errors = dict()
+
+    try:
+      validators.validate_password(password=password, user=user)
+    except exceptions.ValidationError as e:
+      errors['password'] = list(e.messages)
+
+    if errors:
+      raise serializers.ValidationError(errors)
+    return data
+
   def create(self, validated_data):
     password = validated_data.pop('password', None)
     instance = self.Meta.model(**validated_data)
@@ -30,14 +49,17 @@ class UserSerializer(BaseSerializer):
       instance.set_password(password)
     instance.save()
     return instance
+  
+
 
 class FileSerializer(BaseSerializer):
   class Meta:
     model = FileModel
     fields = '__all__'
 
-class RouteSerializer(BaseSerializer):
+class RouteBaseSerializer(BaseSerializer):
   class Meta:
-    model = RouteModel
+    model = RouteBaseModel
     fields = '__all__'
+
   

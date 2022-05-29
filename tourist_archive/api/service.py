@@ -1,3 +1,4 @@
+from django.contrib.gis.geos import LineString
 from gpx_converter import Converter
 from collections import defaultdict
 import gpxpy
@@ -7,18 +8,22 @@ import time
 import os
 
 from .models import FileModel
-from .models import RouteModel
+from .models import RouteBaseModel
+from .models import UserModel
 
 ### Services
 
-def parse_file(filename):
-  parse_gpx_file(filename)
+def parse_file(file_data):
+  #TODO: Make call logic which depends on file extension and call services for each 
+  parse_gpx_file(file_data)
 
-def get_file_path(file):
+def get_file_path(file_name):
   # Make a file path to uploaded file
-  file = file.replace('/api/', '')
+  file_name = file_name.replace('/data/', '')
   module_dir = os.path.dirname(__file__)
-  file_path = os.path.join(module_dir, file)
+  module_dir = module_dir.replace('api', 'data')
+  file_path = os.path.join(module_dir, file_name)
+
   # Check if gpx file exists and is not empty
   validated = validate_file(file_path, True)
   if validated == 1: return "The file is empty!"
@@ -27,13 +32,13 @@ def get_file_path(file):
 
 def validate_file(file_path, flag):
   try:
+    # Check if file is empty or not
     if os.path.getsize(file_path) > 0:
       return file_path
     else:
-      # File is empty!
       return 1
   except OSError as e:
-    # Does not exist or inaccessible
+    # File does not exist or is inaccessible
     if flag == True:
       print("Error uploading the file, retrying in 2 seconds")
       time.sleep(2)
@@ -41,32 +46,38 @@ def validate_file(file_path, flag):
     return 2
 
 
-def parse_gpx_file(filename):
+def parse_gpx_file(file_data):
+  file_name = file_data['file']
   # Getting file path from relative path
-  file_path = get_file_path(filename)
+  file_path = get_file_path(file_name)
+
   with open(file_path, 'r', encoding='utf-8') as gpx_file:
     gpx = gpxpy.parse(gpx_file)
   
   # Parsing route data
   # format -> dictionary[track_name][array of point objects]
-  route_data = defaultdict(list)
+  file_routes_data = defaultdict(list)
   for track in gpx.tracks:
     for segments in track.segments:
       for points in segments.points:
-        route_data[track.name].append({
+        file_routes_data[track.name].append({
           "latitude": points.latitude,
           "longitude": points.longitude,
           "elevation": points.elevation,
           "time": points.time
         })
-  for key in route_data:
-    for data in route_data[key]:
-      print(key ,data['latitude'], data['longitude'])
 
-  #TODO:create linestring from pointdata
-  return route_data
+  # Create route from route data
+  create_routes(file_routes_data, file_data)
 
-def create_route(filename):
-  # Creating route from data
-  pass
-      
+
+def create_routes(file_routes_data, file_data):
+  file = FileModel.objects.get(pk=file_data['id']) 
+  user = UserModel.objects.all()[0]
+  for route_name in file_routes_data:
+    coordinates = []
+    for route_coordinates in file_routes_data[route_name]:
+      coordinates.append((route_coordinates['latitude'], route_coordinates['longitude']))
+    points_line = LineString(coordinates)
+    RouteBaseModel.objects.create(route_name=route_name, file_id=file, points_line=points_line)
+  print(RouteBaseModel.objects.all())

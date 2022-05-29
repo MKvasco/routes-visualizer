@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,7 +84,6 @@ WSGI_APPLICATION = 'tourist_archive.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'ENGINE': 'django.contrib.gis.db.backends.postgis',  # https://docs.djangoproject.com/en/4.0/ref/contrib/gis/tutorial/#setting-up
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
