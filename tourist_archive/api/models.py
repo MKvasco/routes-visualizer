@@ -1,8 +1,6 @@
 from datetime import datetime
 from django.contrib.auth.models import AbstractUser, UserManager, PermissionsMixin
 from django.contrib.gis.db import models
-from django.contrib.postgres.fields import ArrayField
-
 
 ##### Models
 
@@ -53,9 +51,11 @@ class FileModel(models.Model):
   def __str__(self):
     return '%s' % (self.file)
 
-class RouteBaseModel(models.Model):
+class RouteModel(models.Model):
   id = models.AutoField(primary_key=True)
   route_name = models.CharField(max_length=32, blank=True, null=False)
+  title = models.CharField(max_length=32, blank=True, null=True)
+  description = models.TextField(blank=True, null=True)
   file_id = models.ForeignKey(FileModel, on_delete=models.CASCADE, blank=False, null=False)
   points_line = models.LineStringField(srid=4326, blank=False, null=False)
   created_at = models.DateTimeField(auto_now_add=True)
@@ -64,16 +64,11 @@ class RouteBaseModel(models.Model):
     db_table = "route_model"
 
 
-class RouteModel(RouteBaseModel):
-  title = models.CharField(max_length=32, blank=True, null=False)
-  description = models.TextField(blank=True, null=False)
-
-  class Meta():
-    db_table = "user_route_model"
 
     
   # https://docs.djangoproject.com/en/4.0/ref/contrib/postgres/fields/#arrayfield
   # pieces = ArrayField(ArrayField(models.IntegerField()))
+  # from django.contrib.postgres.fields import ArrayField
   #TODO: make calculations -> duration, time start end , elevation gain, elevation loss, elevation overall etc...
   def get_duration():
     pass

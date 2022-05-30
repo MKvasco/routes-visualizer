@@ -1,43 +1,86 @@
-import jwt, datetime
-from django.http import Http404
+from django.shortcuts import get_object_or_404
+from dotenv import load_dotenv
+import jwt, datetime, os
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework import status, viewsets
 
-from .serializers import FileSerializer, RouteBaseSerializer, UserSerializer
-from .models import FileModel, RouteBaseModel, UserModel
+from .serializers import FileSerializer, RouteSerializer, UserSerializer
+from .models import FileModel, RouteModel, UserModel
 from .service import parse_file
 
-##### API Views
-#TODO: make RouteView for getting routes from client
+load_dotenv()
 
-class UserListView(APIView):
-#TODO: get all users
+### ViewSets
+
+class FileViewSet(viewsets.ViewSet):
+
+  queryset = FileModel.objects.all()
+
+  def list(self, request):
+    queryset = FileModel.objects.all()
+    serializer = FileSerializer(queryset, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+  def create(self, request):
+    user = get_current_user(request)
+    serializer = FileSerializer(data=request.data, fields=('id', 'file', 'user_id', 'timestamp'))
+    if serializer.is_valid():
+      serializer.save(user_id=user)
+      parse_file(serializer.data)
+      #TODO: from parse_file validations return make responses here 
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+  def retrieve(self, request, pk=None):
+    file = get_object_or_404(self.queryset, pk=pk)
+    serializer = FileSerializer(file)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+  def update(self, request, pk=None):
+    file = get_object_or_404(self.queryset, pk=pk)
+    serializer = FileSerializer(file, data=request.data, fields=('file',))
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+  def destroy(self, request, pk=None):
+    file = get_object_or_404(self.queryset, pk=pk)
+    file.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+class RouteViewSet(viewsets.ViewSet):
+
+  queryset = RouteModel.objects.all()
+
+  def list(self, request):
+    #TODO: at end check how caching works with queries
+    queryset = RouteModel.objects.all()
+    serializer = RouteSerializer(queryset, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+  def retrieve(self, request, pk=None):
+    base_route = get_object_or_404(self.queryset, pk=pk)
+    serializer = RouteSerializer(base_route)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+  def delete(self, request, pk=None):
+    base_route = get_object_or_404(self.queryset, pk=pk)
+    base_route.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+### Class based API Views
+
+class Users(APIView):
+
   def get(self, request):
     queryset = UserModel.objects.all()
     serializer = UserSerializer(queryset, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
-
-class UserView(APIView):
-
-  def get(self, request):
-    token = request.COOKIES.get('jwt')
-    if not token:
-      raise AuthenticationFailed("You are unauthenticated!")
-    
-    try: 
-      payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-    except jwt.ExpiredSignatureError:
-      raise AuthenticationFailed("You are unauthenticated!")
-
-    user = UserModel.objects.filter(id=payload['id']).first()
-    serializer = UserSerializer(user)
-
-    return Response(serializer.data)
-
-class RegisterView(APIView):
 
   def post(self, request):
     serializer = UserSerializer(data=request.data)
@@ -45,110 +88,59 @@ class RegisterView(APIView):
     serializer.save()
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-class LoginView(APIView):
+### Functional API Views
 
-  def post(self, request):
-    email = request.data['email']
-    password = request.data['password']
-    user = UserModel.objects.filter(email=email).first()
-    
-    if user is None:
-      raise AuthenticationFailed('User not found!')
-    if not user.check_password(password):
-      raise AuthenticationFailed('Incorrect password!')
+@api_view(['get'])
+def user_current(request):
+  user = get_current_user(request)
+  serializer = UserSerializer(user)
+  return Response(serializer.data, status=status.HTTP_200_OK)
 
-    payload = {
-      "id": user.id,
-      "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-      "iat": datetime.datetime.utcnow()
-    }
-
-    #TODO: make secret and algorithm enviroment variable
-    token = jwt.encode(payload, 'secret', algorithm='HS256')
-
-    response = Response()
-    response.set_cookie(key='jwt', value=token, httponly=True)
-    response.data = {
-      "token": token
-    }
-
-    return response
+@api_view(['post'])
+def user_login(request):
+  email = request.data['email']
+  password = request.data['password']
+  user = UserModel.objects.filter(email=email).first()
   
-class LogoutView(APIView):
+  if user is None:
+    raise AuthenticationFailed('User not found!')
+  if not user.check_password(password):
+    raise AuthenticationFailed('Incorrect password!')
 
-  def post(self, request):
-    response = Response()
-    response.delete_cookie('jwt')
-    response.data = {
-      "message": "Succesfully logged out!"
-    }
-    return response
+  payload = {
+    "id": user.id,
+    "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+    "iat": datetime.datetime.utcnow()
+  }
 
+  token = jwt.encode(payload, os.environ.get('SECRET'), os.environ.get('ENCODE_ALGORITHM'))
 
-### list all files or create new file
+  response = Response()
+  response.set_cookie(key='jwt', value=token, httponly=True)
+  response.data = {
+    "token": token
+  }
 
-class FileListView(APIView):
+  return response
+  
+@api_view(['post'])
+def user_logout(request):
+  response = Response()
+  response.delete_cookie('jwt')
+  response.data = {
+    "message": "Succesfully logged out!"
+  }
+  return response
 
-  def get(self, request, format=None):
-    queryset = FileModel.objects.all()
-    serializer = FileSerializer(queryset, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+### Help functions
 
-  def post(self, request):
-    serializer = FileSerializer(data=request.data, fields=('id', 'file', 'timestamp'))
-    if serializer.is_valid():
-      serializer.save()
-      parse_file(serializer.data)
-      #TODO: from parse_file validations return make responses here 
-      #TODO: dont respond just with file and filename but add message and routes with ids
-      return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-### read, update or delete file
-
-class FileDetailView(APIView):
-
-  def get_object(self, pk):
-    try:
-      return FileModel.objects.get(pk=pk)
-    except FileModel.DoesNotExist:
-      raise Http404
-
-  def get(self, request, pk, format=None):
-    file = self.get_object(pk)
-    serializer = FileSerializer(file)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-  def put(self, request, pk, format=None):
-    file = self.get_object(pk)
-    serializer = FileSerializer(file, data=request.data, fields=('file',))
-    if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
-
-  def delete(self, request, pk, format=None):
-    file = self.get_object(pk)
-    file.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
-
-class RouteBaseListView(APIView):
-
-  def get(self, request):
-    queryset = RouteBaseModel.objects.all()
-    serializer = RouteBaseSerializer(queryset, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-class RouteBaseView(APIView):
-
-  def get_object(self, pk):
-    try:
-      return RouteBaseModel.objects.get(pk=pk)
-    except RouteBaseModel.DoesNotExist:
-      raise Http404
-
-  def get(self, request, pk):
-    base_route = self.get_object(pk)
-    serializer = RouteBaseSerializer(base_route)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+def get_current_user(request):
+  token = request.COOKIES.get('jwt')
+  if not token:
+    raise AuthenticationFailed("You are not logged in!")
+  
+  try: 
+    payload = jwt.decode(token, os.environ.get('SECRET'), os.environ.get('DECODE_ALGORITHMS').split())
+  except jwt.ExpiredSignatureError:
+    raise AuthenticationFailed("You are unauthenticated!")
+  return UserModel.objects.filter(id=payload['id']).first() 

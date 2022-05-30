@@ -1,23 +1,18 @@
+from rest_framework.routers import DefaultRouter
 from django.urls import path
 
-from .views import FileDetailView
-from .views import FileListView
-from .views import RouteBaseListView
-from .views import RouteBaseView
-from .views import RegisterView
-from .views import LoginView
-from .views import UserView
-from .views import UserListView
-from .views import LogoutView
+from . import views
+
+router = DefaultRouter()
+router.register(r'files', views.FileViewSet, basename="files")
+router.register(r'routes', views.RouteViewSet, basename="routes")
 
 urlpatterns = [
-    path('files', FileListView.as_view()),
-    path('files/<int:pk>', FileDetailView.as_view()),
-    path('routes', RouteBaseListView.as_view()),
-    path('routes/<int:pk>', RouteBaseView.as_view()),
-    path('register', RegisterView.as_view()),
-    path('login', LoginView.as_view()),
-    path('logout', LogoutView.as_view()),
-    path('user', UserView.as_view()),
-    path('users', UserListView.as_view())
+    path('users', views.Users.as_view()),
+    path('register', views.Users.as_view()),
+    path('user', views.user_current),
+    path('login', views.user_login),
+    path('logout', views.user_logout),
 ]
+
+urlpatterns += router.urls

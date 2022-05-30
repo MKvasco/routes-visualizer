@@ -8,7 +8,7 @@ import time
 import os
 
 from .models import FileModel
-from .models import RouteBaseModel
+from .models import RouteModel
 from .models import UserModel
 
 ### Services
@@ -79,5 +79,5 @@ def create_routes(file_routes_data, file_data):
     for route_coordinates in file_routes_data[route_name]:
       coordinates.append((route_coordinates['latitude'], route_coordinates['longitude']))
     points_line = LineString(coordinates)
-    RouteBaseModel.objects.create(route_name=route_name, file_id=file, points_line=points_line)
-  print(RouteBaseModel.objects.all())
+    RouteModel.objects.create(route_name=route_name, file_id=file, points_line=points_line)
+  print(RouteModel.objects.all())

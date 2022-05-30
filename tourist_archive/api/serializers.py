@@ -4,7 +4,6 @@ from rest_framework import serializers
 
 from .models import UserModel
 from .models import FileModel
-from .models import RouteBaseModel
 from .models import RouteModel
 
 ###### Serializers
@@ -55,9 +54,9 @@ class FileSerializer(BaseSerializer):
     model = FileModel
     fields = '__all__'
 
-class RouteBaseSerializer(BaseSerializer):
+class RouteSerializer(BaseSerializer):
   class Meta:
-    model = RouteBaseModel
+    model = RouteModel
     fields = '__all__'
 
   
