@@ -50,8 +50,6 @@ class UserSerializer(BaseSerializer):
     instance.save()
     return instance
   
-
-
 class FileSerializer(BaseSerializer):
   class Meta:
     model = FileModel

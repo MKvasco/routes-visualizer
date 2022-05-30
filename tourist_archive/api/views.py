@@ -16,7 +16,9 @@ from .service import parse_file
 class UserListView(APIView):
 #TODO: get all users
   def get(self, request):
-    pass
+    queryset = UserModel.objects.all()
+    serializer = UserSerializer(queryset, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserView(APIView):
 
@@ -136,4 +138,17 @@ class RouteBaseListView(APIView):
   def get(self, request):
     queryset = RouteBaseModel.objects.all()
     serializer = RouteBaseSerializer(queryset, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+class RouteBaseView(APIView):
+
+  def get_object(self, pk):
+    try:
+      return RouteBaseModel.objects.get(pk=pk)
+    except RouteBaseModel.DoesNotExist:
+      raise Http404
+
+  def get(self, request, pk):
+    base_route = self.get_object(pk)
+    serializer = RouteBaseSerializer(base_route)
     return Response(serializer.data, status=status.HTTP_200_OK)
