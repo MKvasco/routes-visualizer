@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import "./Register.css";
 
-const Register = () => {
+const Register = (props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,27 +27,34 @@ const Register = () => {
         <form onSubmit={submit}>
           <div className="registerForm--registerContainer">
             <input
-              placeholder="Name"
+              placeholder="First Name"
               required
               onChange={(e) => setName(e.target.value)}
             />
 
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Email Address"
               required
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"
-              placeholder="Password"
+              placeholder="New Password"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Confirm Password"
               required
               onChange={(e) => setPassword(e.target.value)}
             />
 
             <button type="submit">Submit</button>
             <p>
-              Already registered? Click <a>here</a>
+              Already registered? Click{" "}
+              <a onClick={() => props.toggleFlag()}>here</a>
             </p>
           </div>
         </form>

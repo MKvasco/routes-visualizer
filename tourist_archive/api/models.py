@@ -41,8 +41,7 @@ class UserModel(AbstractUser, PermissionsMixin):
 class FileModel(models.Model):
   id = models.AutoField(primary_key=True)
   file = models.FileField(upload_to='data/imports', blank=False, null=False)
-  #TODO: send from fronetend current user, if froneend implemented swtich Trues to Falses
-  user_id = models.ForeignKey(UserModel, on_delete=models.CASCADE, blank=True, null=True)
+  user_id = models.ForeignKey(UserModel, on_delete=models.CASCADE, blank=False, null=True)
   timestamp = models.DateTimeField(auto_now_add=True)
 
   class Meta:
@@ -50,7 +49,7 @@ class FileModel(models.Model):
   
   def __str__(self):
     return '%s' % (self.file)
-
+  
 class RouteModel(models.Model):
   id = models.AutoField(primary_key=True)
   route_name = models.CharField(max_length=32, blank=True, null=False)

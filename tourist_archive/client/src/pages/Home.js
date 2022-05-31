@@ -1,41 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
+// Css import
 import "./styles/Home.css";
 
-const Home = () => {
-  const [user, setUser] = useState("");
-  const [redirect, setRedirect] = useState(false);
+//Components import
+import Login from "../components/LoginForm/Login";
+import Register from "../components/RegisterForm/Register";
 
+const Home = (props) => {
   useEffect(() => {
-    const fetchUser = async () => {
-      const response = await fetch("http://localhost:8000/api/user", {
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-      const content = await response.json();
-      setUser(content.name);
-      console.log(content);
-    };
-    fetchUser();
+    document.body.style = `background: url("../../../static/images/background_home_image.jpg") no-repeat
+      center center fixed;
+      background-size: cover;`;
   }, []);
-
-  const logout = async () => {
-    await fetch("http://localhost:8000/api/logout", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-  };
+  const [flag, setFlag] = useState(true);
 
   return (
     <>
-      <div>Welcome, {user}!</div>
-      <Link to="/login" onClick={logout}>
-        Logout
-      </Link>
+      <div className={flag ? "loginFormContainer" : "loginFormContainer--hide"}>
+        <Login
+          authenticated={(value) => props.authenticated(value)}
+          toggleFlag={() => setFlag(!flag)}
+        />
+      </div>
+      <div
+        className={
+          flag ? "registerFormContainer--hide" : "registerFormContainer"
+        }
+      >
+        <Register toggleFlag={() => setFlag(!flag)} />
+      </div>
     </>
   );
 };
-
 export default Home;

@@ -4,19 +4,17 @@ import { useNavigate } from "react-router-dom";
 // Css import
 import "./Login.css";
 
-const Login = () => {
+const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [wrongEmail, setWrongEmail] = useState(false);
+  const [wrongPassword, setWrongPassword] = useState(false);
   const navigate = useNavigate();
-
-  const redirectToRegister = () => {
-    navigate("/register", { replace: true });
-  };
 
   const submitLogin = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:8000/api/login", {
+    const response = await fetch("http://localhost:8000/api/login", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -25,10 +23,24 @@ const Login = () => {
         password: password,
       }),
     });
-    setRedirect(true);
+    const content = await response.json();
+    if (content.token) {
+      setRedirect(true);
+      props.authenticated(true);
+    }
+    if (content.detail == "User not found!") {
+      props.authenticated(false);
+      setWrongEmail(true);
+      setWrongPassword(false);
+    }
+    if (content.detail == "Incorrect password!") {
+      props.authenticated(false);
+      setWrongPassword(true);
+      setWrongEmail(false);
+    }
   };
 
-  if (redirect) navigate("/home");
+  if (redirect) setTimeout(() => navigate("/home"), 20);
 
   return (
     <>
@@ -38,16 +50,34 @@ const Login = () => {
             <input
               type="email"
               placeholder="Email"
-              required
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
+            <p
+              className={
+                wrongEmail
+                  ? "loginForm__wrongCredentials"
+                  : "loginForm--displayNone"
+              }
+            >
+              You have entered wrong email address!
+            </p>
 
             <input
               type="password"
               placeholder="Password"
-              required
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
+            <p
+              className={
+                wrongPassword
+                  ? "loginForm__wrongCredentials"
+                  : "loginForm--displayNone"
+              }
+            >
+              Your have entered wrong password!
+            </p>
 
             <button type="submit">Login</button>
           </div>
@@ -56,7 +86,7 @@ const Login = () => {
           <p>Don't have an account?</p>
           <button
             className="loginForm--registerButton"
-            onClick={redirectToRegister}
+            onClick={() => props.toggleFlag()}
           >
             Register
           </button>

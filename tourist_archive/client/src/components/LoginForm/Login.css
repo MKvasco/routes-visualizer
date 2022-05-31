@@ -71,3 +71,18 @@
   background-color: var(--dark-green);
   cursor: pointer;
 }
+
+.loginForm__wrongCredentials {
+  display: block;
+  font-size: 15px;
+  color: red;
+  margin: 0.3rem;
+}
+
+.loginForm--displayNone {
+  display: none;
+}
+
+.loginFormContainer--hide {
+  display: none;
+}

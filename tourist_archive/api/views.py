@@ -31,7 +31,6 @@ class FileViewSet(viewsets.ViewSet):
     if serializer.is_valid():
       serializer.save(user_id=user)
       parse_file(serializer.data)
-      #TODO: from parse_file validations return make responses here 
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
