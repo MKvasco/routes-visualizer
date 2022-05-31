@@ -96,6 +96,16 @@ def user_current(request):
   serializer = UserSerializer(user)
   return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['get'])
+def user_current_files(request):
+  serializer = FileSerializer(get_current_user_files(request), many=True)
+  return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['get'])
+def user_current_routes(request):
+  serializer = RouteSerializer(get_current_user_routes(request), many=True)
+  return Response(serializer.data, status=status.HTTP_200_OK)
+
 @api_view(['post'])
 def user_login(request):
   email = request.data['email']
@@ -144,3 +154,14 @@ def get_current_user(request):
   except jwt.ExpiredSignatureError:
     raise AuthenticationFailed("You are unauthenticated!")
   return UserModel.objects.filter(id=payload['id']).first() 
+
+def get_current_user_files(request):
+  user = get_current_user(request)
+  return FileModel.objects.filter(user_id=user)
+
+def get_current_user_routes(request):
+  files = get_current_user_files(request)
+  queryset = RouteModel.objects.none()
+  for file in files:
+    queryset |= RouteModel.objects.filter(file_id=file)
+  return queryset

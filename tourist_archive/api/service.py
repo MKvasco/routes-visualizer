@@ -73,7 +73,6 @@ def parse_gpx_file(file_data):
 
 def create_routes(file_routes_data, file_data):
   file = FileModel.objects.get(pk=file_data['id']) 
-  user = UserModel.objects.all()[0]
   for route_name in file_routes_data:
     coordinates = []
     for route_coordinates in file_routes_data[route_name]:
