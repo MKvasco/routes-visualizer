@@ -62,9 +62,6 @@ class RouteModel(models.Model):
   class Meta:
     db_table = "route_model"
 
-
-
-    
   # https://docs.djangoproject.com/en/4.0/ref/contrib/postgres/fields/#arrayfield
   # pieces = ArrayField(ArrayField(models.IntegerField()))
   # from django.contrib.postgres.fields import ArrayField

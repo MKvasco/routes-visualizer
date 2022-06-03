@@ -2,6 +2,7 @@ asgiref==3.5.0
 Django==4.0.4
 django-cors-headers==3.11.0
 djangorestframework==3.13.1
+djangorestframework-gis==1.0
 gpx-converter==2.0.0
 gpxpy==1.5.0
 numpy==1.22.3

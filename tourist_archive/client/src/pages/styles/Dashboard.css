@@ -1,0 +1,28 @@
+.dashboard__body {
+  height: 100vh;
+  width: 100vw;
+}
+
+.dashboard__nav {
+  height: 4%;
+}
+.dashboard__footer {
+  height: 2.5%;
+}
+
+.dashboard__section {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 93.5%;
+}
+.dashboard__section--right {
+  justify-self: flex-end;
+  margin: 5rem 5rem auto 0;
+  width: 40%;
+  height: 70%;
+}
+
+.dashboard__section--left {
+  margin: 0 auto;
+}

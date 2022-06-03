@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',                       # better geo data handling
     'corsheaders',                              # basic security ,allowing requests when in dev (normaly disabled by django)
     'rest_framework',                           # better rest api implementing
+    'rest_framework_gis',                       # extensions for gis model serializing
     'api',                                      # Backend app
     'client',                                   # Frontend app 
 ]

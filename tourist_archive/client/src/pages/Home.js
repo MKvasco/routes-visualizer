@@ -7,21 +7,19 @@ import "./styles/Home.css";
 import Login from "../components/LoginForm/Login";
 import Register from "../components/RegisterForm/Register";
 
-const Home = (props) => {
+const Home = () => {
+  const [flag, setFlag] = useState(true);
+
   useEffect(() => {
     document.body.style = `background: url("../../../static/images/background_home_image.jpg") no-repeat
       center center fixed;
       background-size: cover;`;
   }, []);
-  const [flag, setFlag] = useState(true);
 
   return (
     <>
       <div className={flag ? "loginFormContainer" : "loginFormContainer--hide"}>
-        <Login
-          authenticated={(value) => props.authenticated(value)}
-          toggleFlag={() => setFlag(!flag)}
-        />
+        <Login toggleFlag={() => setFlag(!flag)} />
       </div>
       <div
         className={

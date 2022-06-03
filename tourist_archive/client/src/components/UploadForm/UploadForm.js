@@ -4,7 +4,7 @@ const Upload = (props) => {
   return (
     <>
       <h2>Upload form</h2>
-      <form method="post" enctype="multipart/form-data">
+      <form method="post" encType="multipart/form-data">
         <input type="file" name="gps_file" />
         <button className="button" type="submit">
           Upload GPS file

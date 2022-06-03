@@ -35,18 +35,21 @@ const Register = (props) => {
             <input
               type="email"
               placeholder="Email Address"
+              autoComplete="username"
               required
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"
               placeholder="New Password"
+              autoComplete="new-password"
               required
               onChange={(e) => setPassword(e.target.value)}
             />
             <input
               type="password"
               placeholder="Confirm Password"
+              autoComplete="new-password"
               required
               onChange={(e) => setPassword(e.target.value)}
             />

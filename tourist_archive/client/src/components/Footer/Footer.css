@@ -1,0 +1,25 @@
+.footer__main {
+  display: flex;
+  background-color: var(--foreground-color);
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.footer__main--left {
+  width: 50%;
+}
+
+.footer__main--left > ul {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 2rem;
+}
+
+.footer__main--right {
+  display: flex;
+  width: 200px;
+  justify-content: space-between;
+  margin: 0 5rem;
+}

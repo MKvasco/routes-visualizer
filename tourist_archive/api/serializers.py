@@ -1,6 +1,7 @@
 import django.contrib.auth.password_validation as validators
 from django.core import exceptions
 from rest_framework import serializers
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from .models import UserModel
 from .models import FileModel
@@ -48,15 +49,14 @@ class UserSerializer(BaseSerializer):
       instance.set_password(password)
     instance.save()
     return instance
-  
+
 class FileSerializer(BaseSerializer):
   class Meta:
     model = FileModel
     fields = '__all__'
 
-class RouteSerializer(BaseSerializer):
+class RouteSerializer(GeoFeatureModelSerializer):
   class Meta:
     model = RouteModel
+    geo_field = "points_line"
     fields = '__all__'
-
-  

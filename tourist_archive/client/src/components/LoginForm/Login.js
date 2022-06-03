@@ -26,21 +26,18 @@ const Login = (props) => {
     const content = await response.json();
     if (content.token) {
       setRedirect(true);
-      props.authenticated(true);
     }
     if (content.detail == "User not found!") {
-      props.authenticated(false);
       setWrongEmail(true);
       setWrongPassword(false);
     }
     if (content.detail == "Incorrect password!") {
-      props.authenticated(false);
       setWrongPassword(true);
       setWrongEmail(false);
     }
   };
 
-  if (redirect) setTimeout(() => navigate("/home"), 20);
+  if (redirect) setTimeout(() => navigate("/dashboard"), 1);
 
   return (
     <>
@@ -50,6 +47,7 @@ const Login = (props) => {
             <input
               type="email"
               placeholder="Email"
+              autoComplete="username"
               onChange={(e) => setEmail(e.target.value)}
               required
             />
@@ -66,6 +64,7 @@ const Login = (props) => {
             <input
               type="password"
               placeholder="Password"
+              autoComplete="scurrent-password"
               onChange={(e) => setPassword(e.target.value)}
               required
             />
