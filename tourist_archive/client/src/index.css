@@ -1,7 +1,5 @@
 /* Import component styles */
 @import "./components/Map/MapStyles.css";
-@import "./components/UploadForm/UploadForm.css";
-/* Import page styles */
 
 /* Import fonts */
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");

@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Pages
-import { Home, Dashboard, NotFound } from "./pages";
+import { Home, Dashboard } from "./pages";
 
 // Css
 import "./index.css";

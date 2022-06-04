@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 
-import "./RouteTable.css";
+import "./tables.css";
 
 const RouteTable = (props) => {
-  const [data, setData] = useState(null);
+  const [routeData, setRouteData] = useState(null);
 
   useEffect(() => {
     const fetchRoutes = async () => {
       const response = await fetch("http://localhost:8000/api/user/routes");
       const content = await response.json();
-      if (!content.detail) setData(content);
+      if (!content.detail) setRouteData(content);
     };
     fetchRoutes();
-  }, []);
+  }, [props.toggleUpdate]);
 
   const formatDate = (date) => {
     let localDate = new Date(date);
@@ -36,8 +36,8 @@ const RouteTable = (props) => {
           </tr>
         </thead>
         <tbody>
-          {data &&
-            data["features"].map((route) => (
+          {routeData &&
+            routeData["features"].map((route) => (
               <tr key={route["id"]}>
                 <td>
                   {route["properties"]["title"]

@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import "./styles/Home.css";
 
 //Components import
-import Login from "../components/LoginForm/Login";
-import Register from "../components/RegisterForm/Register";
+import Login from "../components/Forms/Login";
+import Register from "../components/Forms/Register";
 
 const Home = () => {
   const [flag, setFlag] = useState(true);

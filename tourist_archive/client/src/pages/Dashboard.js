@@ -5,20 +5,24 @@ import "./styles/Dashboard.css";
 
 // Components
 
-import UploadForm from "../components/UploadForm/UploadForm";
+import UploadForm from "../components/Forms/Upload";
 import MapApp from "../components/Map/MapApp";
-import FileTable from "../components/FileTable/FileTable";
-import RouteTable from "../components/RouteTable/RouteTable";
+import FileTable from "../components/Tables/FileTable";
+import RouteTable from "../components/Tables/RouteTable";
 import NavBar from "../components/NavBar/NavBar";
 import Footer from "../components/Footer/Footer";
-import Modal from "../components/Modal/Modal";
+import RouteModal from "../components/Modals/RouteModal";
+import FileModal from "../components/Modals/FileModal";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [modalActive, setModalActive] = useState(false);
-  const [modalContent, setModalContent] = useState("");
+  const [toggleUpdate, setToggleUpdate] = useState(false);
+  const [showRouteModal, setShowRouteModal] = useState(false);
+  const [showFileModal, setShowFileModal] = useState(false);
+  const [routeModalContent, setRouteModalContent] = useState("");
+  const [fileModalContent, setFileModalContent] = useState("");
 
   useEffect(() => {
     document.body.style = `background: var(--background-color)`;
@@ -47,12 +51,18 @@ const Dashboard = () => {
   return (
     <>
       <div className="dashboard__body">
-        {modalActive && (
-          <Modal
-            content={modalContent}
-            toggleModal={() => {
-              setModalActive(!modalActive);
-            }}
+        {showRouteModal && (
+          <RouteModal
+            content={routeModalContent}
+            toggleModal={() => setShowRouteModal(!showRouteModal)}
+            toggleUpdate={() => setToggleUpdate(!toggleUpdate)}
+          />
+        )}
+        {showFileModal && (
+          <FileModal
+            content={fileModalContent}
+            toggleModal={() => setShowFileModal(!showFileModal)}
+            toggleUpdate={() => setToggleUpdate(!toggleUpdate)}
           />
         )}
         <div className="dashboard__nav">
@@ -63,15 +73,17 @@ const Dashboard = () => {
             <UploadForm />
             <FileTable
               toggleModal={(content) => {
-                setModalActive(!modalActive);
-                setModalContent(content);
+                setShowFileModal(!showFileModal);
+                setFileModalContent(content);
               }}
+              toggleUpdate={toggleUpdate}
             />
             <RouteTable
               toggleModal={(content) => {
-                setModalActive(!modalActive);
-                setModalContent(content);
+                setShowRouteModal(!showRouteModal);
+                setRouteModalContent(content);
               }}
+              toggleUpdate={toggleUpdate}
             />
           </div>
           <div className="dashboard__section--right">

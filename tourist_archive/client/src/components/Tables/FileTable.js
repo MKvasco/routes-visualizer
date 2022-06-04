@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 
-import "./FileTable.css";
+import "./tables.css";
 
 const FileTable = (props) => {
-  const [data, setData] = useState(null);
+  const [fileData, setFileData] = useState(null);
 
   useEffect(() => {
     const fetchFiles = async () => {
       const response = await fetch("http://localhost:8000/api/user/files");
       const content = await response.json();
-      if (!content.detail) setData(content);
+      if (!content.detail) setFileData(content);
     };
     fetchFiles();
-  }, []);
+  }, [props.toggleUpdate]);
 
   const formatDate = (date) => {
     let localDate = new Date(date);
@@ -31,8 +31,8 @@ const FileTable = (props) => {
           </tr>
         </thead>
         <tbody>
-          {data &&
-            data.map((file) => (
+          {fileData &&
+            fileData.map((file) => (
               <tr key={file["id"]}>
                 <td>{file["file"].replace("/data/imports/", "")}</td>
                 <td>{formatDate(file["timestamp"])}</td>
