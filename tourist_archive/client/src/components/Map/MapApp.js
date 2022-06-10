@@ -16,7 +16,7 @@ const MapApp = (props) => {
   const [center, setCenter] = useState([0, 0]);
   const [view, setView] = useState();
   const [routesFeature, setRoutesFeature] = useState(new Feature());
-  const [routes, setRoutes] = useState(new MultiLineString([[]]));
+  const [routes, setRoutes] = useState();
   const [featuresLayer, setFeaturesLayer] = useState();
   const mapElement = useRef();
 
@@ -82,27 +82,35 @@ const MapApp = (props) => {
       let feature = featuresLayer
         .getSource()
         .getFeatureById(props.hideRoute.id);
+      featuresLayer.getSource().removeFeature(feature);
       featuresLayer.getSource().addFeature(routesFeature);
-      if (routesFeature.getGeometry())
+      if (
+        routesFeature.getGeometry() &&
+        routesFeature.getGeometry().flatCoordinates.length > 0
+      ) {
         view.fit(routesFeature.getGeometry(), {
           padding: [100, 100, 100, 100],
         });
-      featuresLayer.getSource().removeFeature(feature);
+      }
     }
   }, [props.hideRoute]);
 
   useEffect(() => {
     //TODO: make each route unique color ( read from db )
-    if (props.addRoute) {
-      let coordinates = [];
-      props.addRoute.geometry.coordinates.forEach((coordinate) => {
-        coordinates.push(fromLonLat(coordinate));
+    if (props.addRoutes) {
+      let lineStrings = [];
+
+      props.addRoutes.forEach((route) => {
+        let coordinates = [];
+        route.geometry.coordinates.forEach((coordinate) => {
+          coordinates.push(fromLonLat(coordinate));
+        });
+        lineStrings.push(new LineString(coordinates));
       });
-      let route = new LineString(coordinates);
-      let color = "#fffff";
-      let width = 5;
-      routes.appendLineString(route);
-      routesFeature.setGeometry(routes);
+
+      const color = "#fffff";
+      const width = 5;
+
       routesFeature.setStyle(
         new Style({
           stroke: new Stroke({
@@ -111,12 +119,27 @@ const MapApp = (props) => {
           }),
         })
       );
-      view.fit(routesFeature.getGeometry(), { padding: [100, 100, 100, 100] });
+
+      setRoutes(new MultiLineString(lineStrings));
     }
-  }, [props.addRoute]);
+  }, [props.addRoutes]);
+
   useEffect(() => {
-    // Remove linestring from multilinestring
-  }, [props.removeRoute]);
+    if (routes) {
+      routesFeature.setGeometry(routes);
+      if (
+        routesFeature.getGeometry() &&
+        routesFeature.getGeometry().flatCoordinates.length > 0
+      ) {
+        view.fit(routesFeature.getGeometry(), {
+          padding: [100, 100, 100, 100],
+        });
+      } else {
+        view.setCenter(center);
+        view.setZoom(zoom);
+      }
+    }
+  }, [routes]);
 
   return <div ref={mapElement} className="map" />;
 };

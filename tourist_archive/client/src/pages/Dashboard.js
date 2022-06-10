@@ -27,6 +27,7 @@ const Dashboard = () => {
   const [hideRouteDetails, setHideRouteDetails] = useState(false);
   const [addRoute, setAddRoute] = useState(false);
   const [removeRoute, setRemoveRoute] = useState(false);
+  const [routes, setRoutes] = useState([]);
   const [showFileRoutes, setShowFileRoutes] = useState(false);
 
   useEffect(() => {
@@ -58,11 +59,9 @@ const Dashboard = () => {
 
   const handleCheckbox = (e, content) => {
     if (e.target.checked) {
-      setAddRoute(content);
-      setRemoveRoute(false);
+      setRoutes((oldArray) => [...oldArray, content]);
     } else {
-      setRemoveRoute(content);
-      setAddRoute(false);
+      setRoutes(routes.filter((route) => route.id != content.id));
     }
   };
 
@@ -110,8 +109,8 @@ const Dashboard = () => {
                 setShowRouteDetails(content);
                 setHideRouteDetails(false);
               }}
-              addRoute={(e, content) => {
-                handleCheckbox(e, content);
+              addRoute={(e, content, index) => {
+                handleCheckbox(e, content, index);
               }}
               toggleUpdate={toggleUpdate}
             />
@@ -120,7 +119,7 @@ const Dashboard = () => {
             <MapApp
               showRoute={showRouteDetails}
               hideRoute={hideRouteDetails}
-              addRoute={addRoute}
+              addRoutes={routes}
               removeRoute={removeRoute}
             />
           </div>
