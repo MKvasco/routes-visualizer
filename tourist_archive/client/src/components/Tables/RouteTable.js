@@ -60,7 +60,10 @@ const RouteTable = (props) => {
                   <button onClick={() => props.toggleModal(route)}>Show</button>
                 </td>
                 <td>
-                  <input type="checkbox" />
+                  <input
+                    type="checkbox"
+                    onChange={(e) => props.addRoute(e, route)}
+                  />
                 </td>
               </tr>
             ))}

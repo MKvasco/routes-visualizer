@@ -23,6 +23,11 @@ const Dashboard = () => {
   const [showFileModal, setShowFileModal] = useState(false);
   const [routeModalContent, setRouteModalContent] = useState("");
   const [fileModalContent, setFileModalContent] = useState("");
+  const [showRouteDetails, setShowRouteDetails] = useState(false);
+  const [hideRouteDetails, setHideRouteDetails] = useState(false);
+  const [addRoute, setAddRoute] = useState(false);
+  const [removeRoute, setRemoveRoute] = useState(false);
+  const [showFileRoutes, setShowFileRoutes] = useState(false);
 
   useEffect(() => {
     document.body.style = `background: var(--background-color)`;
@@ -38,12 +43,27 @@ const Dashboard = () => {
     fetchUser();
   }, []);
 
+  //TODO: fetch routes from file id
+  const getFileRoutes = async (content) => {
+    const response = await fetch();
+  };
+
   const logout = async () => {
     await fetch("http://localhost:8000/api/logout", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
+  };
+
+  const handleCheckbox = (e, content) => {
+    if (e.target.checked) {
+      setAddRoute(content);
+      setRemoveRoute(false);
+    } else {
+      setRemoveRoute(content);
+      setAddRoute(false);
+    }
   };
 
   if (redirect) return setTimeout(() => navigate("/", { replace: true }), 1);
@@ -54,7 +74,11 @@ const Dashboard = () => {
         {showRouteModal && (
           <RouteModal
             content={routeModalContent}
-            toggleModal={() => setShowRouteModal(!showRouteModal)}
+            toggleModal={() => {
+              setShowRouteModal(!showRouteModal);
+              setHideRouteDetails(routeModalContent);
+              setShowRouteDetails(false);
+            }}
             toggleUpdate={() => setToggleUpdate(!toggleUpdate)}
           />
         )}
@@ -75,6 +99,7 @@ const Dashboard = () => {
               toggleModal={(content) => {
                 setShowFileModal(!showFileModal);
                 setFileModalContent(content);
+                //TODO: call getFileRoutes
               }}
               toggleUpdate={toggleUpdate}
             />
@@ -82,12 +107,22 @@ const Dashboard = () => {
               toggleModal={(content) => {
                 setShowRouteModal(!showRouteModal);
                 setRouteModalContent(content);
+                setShowRouteDetails(content);
+                setHideRouteDetails(false);
+              }}
+              addRoute={(e, content) => {
+                handleCheckbox(e, content);
               }}
               toggleUpdate={toggleUpdate}
             />
           </div>
           <div className="dashboard__section--right">
-            <MapApp />
+            <MapApp
+              showRoute={showRouteDetails}
+              hideRoute={hideRouteDetails}
+              addRoute={addRoute}
+              removeRoute={removeRoute}
+            />
           </div>
         </div>
         <div className="dashboard__footer">
