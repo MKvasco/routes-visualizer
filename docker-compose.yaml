@@ -3,7 +3,7 @@ version: "3.9"
 services:
   server:
     container_name: ${PROJECT_NAME}_server
-    build: ./db
+    build: ./data/db
     image: mkvasco/${IMAGE_NAME}-server
     restart: always
     command:
@@ -24,8 +24,6 @@ services:
     build: ./tourist_archive
     image: mkvasco/${IMAGE_NAME}-web
     command: sh run_django.sh
-    # volumes:
-    # - ./tourist_archive:/app/
     ports:
       - 8000:8000
     networks:

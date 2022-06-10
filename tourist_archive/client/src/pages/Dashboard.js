@@ -25,9 +25,8 @@ const Dashboard = () => {
   const [fileModalContent, setFileModalContent] = useState("");
   const [showRouteDetails, setShowRouteDetails] = useState(false);
   const [hideRouteDetails, setHideRouteDetails] = useState(false);
-  const [addRoute, setAddRoute] = useState(false);
-  const [removeRoute, setRemoveRoute] = useState(false);
   const [routes, setRoutes] = useState([]);
+  const [removeRoute, setRemoveRoute] = useState(false);
   const [showFileRoutes, setShowFileRoutes] = useState(false);
 
   useEffect(() => {
@@ -93,15 +92,6 @@ const Dashboard = () => {
         </div>
         <div className="dashboard__section">
           <div className="dashboard__section--left">
-            <UploadForm />
-            <FileTable
-              toggleModal={(content) => {
-                setShowFileModal(!showFileModal);
-                setFileModalContent(content);
-                //TODO: call getFileRoutes
-              }}
-              toggleUpdate={toggleUpdate}
-            />
             <RouteTable
               toggleModal={(content) => {
                 setShowRouteModal(!showRouteModal);
@@ -114,6 +104,15 @@ const Dashboard = () => {
               }}
               toggleUpdate={toggleUpdate}
             />
+            <FileTable
+              toggleModal={(content) => {
+                setShowFileModal(!showFileModal);
+                setFileModalContent(content);
+                //TODO: call getFileRoutes
+              }}
+              toggleUpdate={toggleUpdate}
+            />
+            <UploadForm />
           </div>
           <div className="dashboard__section--right">
             <MapApp

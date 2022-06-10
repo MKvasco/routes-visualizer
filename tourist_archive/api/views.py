@@ -10,7 +10,7 @@ from rest_framework import status, viewsets
 
 from .serializers import FileSerializer, RouteSerializer, UserSerializer
 from .models import FileModel, RouteModel, UserModel
-from .service import parse_file
+from .services.parsers.parser import parse_file
 
 load_dotenv()
 
@@ -50,6 +50,7 @@ class FileViewSet(viewsets.ViewSet):
   def destroy(self, request, pk=None):
     file = get_object_or_404(self.queryset, pk=pk)
     file.delete()
+    os.remove(str(file))
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 class RouteViewSet(viewsets.ViewSet):

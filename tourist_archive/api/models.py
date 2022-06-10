@@ -41,6 +41,8 @@ class UserModel(AbstractUser, PermissionsMixin):
 class FileModel(models.Model):
   id = models.AutoField(primary_key=True)
   file = models.FileField(upload_to='data/imports', blank=False, null=False)
+  #TODO: mozem osetrit import z frontendu takto?
+  # type = models.CharField(max_length=16, null=False, blank=False)
   user_id = models.ForeignKey(UserModel, on_delete=models.CASCADE, blank=False, null=True)
   timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -52,9 +54,11 @@ class FileModel(models.Model):
   
 class RouteModel(models.Model):
   id = models.AutoField(primary_key=True)
-  route_name = models.CharField(max_length=32, blank=True, null=False)
-  title = models.CharField(max_length=32, blank=True, null=True)
-  description = models.TextField(blank=True, null=True)
+  route_name = models.CharField(max_length=32, default="N/A", blank=True, null=True)
+  title = models.CharField(max_length=32, default="untitled", blank=True, null=True)
+  description = models.TextField(default="undescribed", blank=True ,null=True)
+  color = models.CharField(max_length=16, default="#fffff", blank=False, null=False)
+  width = models.IntegerField(default=5, blank=False, null=True)
   file_id = models.ForeignKey(FileModel, on_delete=models.CASCADE, blank=False, null=False)
   points_line = models.LineStringField(srid=4326, blank=False, null=False)
   created_at = models.DateTimeField(auto_now_add=True)
