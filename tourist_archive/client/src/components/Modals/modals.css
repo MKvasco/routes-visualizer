@@ -1,4 +1,5 @@
-.modal__container {
+.modal__container,
+.modal__uploadContainer {
   display: flex;
   position: absolute;
   top: 0;
@@ -11,10 +12,29 @@
 }
 
 .modal {
-  background-color: var(--background-color);
+  background-color: var(--base-color);
   box-shadow: 3px 5px 10px 01px rgba(70, 70, 70, 0.747);
-  border-radius: 0.25rem;
   width: 40%;
-  height: 70%;
+  height: 80%;
   margin: auto 0 auto 1.5rem;
+}
+
+.modal__uploadContainer {
+  z-index: 2;
+}
+
+.modal__upload {
+  position: relative;
+  background-color: var(--base-color);
+  border-radius: 0.5rem;
+  box-shadow: 3px 5px 10px 01px rgba(70, 70, 70, 0.747);
+  width: 40%;
+  height: 40%;
+  margin: 10rem auto auto auto;
+}
+
+.modal__upload > button {
+  position: absolute;
+  right: 0;
+  top: 0;
 }

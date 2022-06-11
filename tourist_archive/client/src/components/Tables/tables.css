@@ -2,27 +2,16 @@
 
 .routeTable {
   width: 90%;
-  margin: 1rem auto;
+  margin: 0 auto;
 }
 .routeTable table {
   width: 100%;
-}
-
-.routeTable table,
-.routeTable th,
-.routeTable td {
-  border: 1px solid black;
-  border-collapse: collapse;
 }
 
 .routeTable input {
   margin-top: 0.25rem;
   width: 20px;
   height: 20px;
-}
-
-.routeTablee button {
-  width: 50px;
 }
 
 /* Defining columns */
@@ -54,25 +43,69 @@
   width: 100%;
 }
 
+/* Defining columns */
+.fileTable table > tbody > tr > :nth-child(3) {
+  width: 50px;
+}
+.fileTable table > tbody > tr > :nth-child(3) {
+  padding: 0;
+}
+
+/* Combined */
+
+.routeTable,
+.fileTable {
+  height: 400px;
+  overflow: scroll;
+}
+
+.routeTable thead,
+.fileTable thead {
+  position: sticky;
+  top: 0px;
+}
+
+.routeTable td,
+.fileTable td {
+  background-color: white;
+  color: var(--accent-color);
+  font-weight: 300;
+}
+
+.routeTable th,
+.fileTable th {
+  background-color: var(--accent-color);
+  color: var(--main-color);
+  font-size: 16px;
+  font-weight: 400;
+}
+.routeTable th:hover,
+.fileTable th:hover {
+  color: var(--base-color);
+}
+
+.routeTable th,
+.fileTable th {
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.routeTable td,
+.fileTable td {
+  text-align: center;
+  padding: 0.3rem;
+}
+.routeTable img,
+.fileTable img {
+  margin-top: 0.2rem;
+}
+
+.routeTable table,
+.routeTable th,
+.routeTable td,
 .fileTable table,
 .fileTable th,
 .fileTable td {
   border: 1px solid black;
   border-collapse: collapse;
-}
-
-/* Combined */
-
-.routeTable th,
-.fileTable th {
-  height: 30px;
-  background-color: var(--modal-color);
-}
-
-.routeTable th,
-.routeTable td,
-.fileTable th,
-.fileTable td {
-  text-align: center;
-  padding: 0.2rem;
 }

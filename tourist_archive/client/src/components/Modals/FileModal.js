@@ -31,7 +31,6 @@ const FileModal = (props) => {
             onClick={() => {
               deleteFile(props.content.id);
               props.toggleModal();
-              // props.deleteFileFromTable(deletedFile);
             }}
           >
             Delete

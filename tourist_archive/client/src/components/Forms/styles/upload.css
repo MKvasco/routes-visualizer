@@ -1,11 +1,36 @@
 .uploadForm {
-  width: 90%;
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
 }
 
 .uploadForm__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  height: 100%;
+  width: 100%;
 }
 
-.uploadForm h3 {
-  font-weight: 500;
+.uploadForm__uploadImage {
+  background-color: var(--main-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+.uploadForm__uploadImage:hover {
+  transform: scale(1.05);
+  transition: ease-in-out 200ms;
+  background-color: var(--light-blue);
+}
+
+.uploadForm__uploadInfo {
+  margin: 1rem auto;
+  text-align: center;
+  width: 100%;
+}
+
+.uploadForm__fileInfo {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
 }

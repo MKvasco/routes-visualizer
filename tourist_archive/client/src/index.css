@@ -14,11 +14,12 @@
   --dark-green: #399525;
   --green: #40a829;
 
-  --background-color: #f5f5f5;
-  --modal-color: #b2b2b2bb;
-  --foreground-color: #808080;
+  --modal-color: #adadadf4;
   --text-color: #000;
   --white: #ffff;
+  --base-color: #f5f5f5;
+  --main-color: #808080;
+  --accent-color: #404040;
 }
 
 * {

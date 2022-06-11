@@ -14,7 +14,7 @@ const FileTable = (props) => {
         <table>
           <thead>
             <tr>
-              <th>File</th>
+              <th>Filename</th>
               <th>Uploaded</th>
               <th>Details</th>
             </tr>
@@ -26,9 +26,13 @@ const FileTable = (props) => {
                   <td>{file["file"].replace("/data/imports/", "")}</td>
                   <td>{formatDate(file["timestamp"])}</td>
                   <td>
-                    <button onClick={() => props.toggleModal(file)}>
-                      Show
-                    </button>
+                    <img
+                      src="../../../static/images/detail.png"
+                      alt="detail"
+                      width="20"
+                      height="20"
+                      onClick={() => props.toggleModal(file)}
+                    />
                   </td>
                 </tr>
               ))}

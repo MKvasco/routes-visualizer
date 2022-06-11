@@ -13,6 +13,7 @@ import NavBar from "../components/NavBar/NavBar";
 import Footer from "../components/Footer/Footer";
 import RouteModal from "../components/Modals/RouteModal";
 import FileModal from "../components/Modals/FileModal";
+import UploadModal from "../components/Modals/UploadModal";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const Dashboard = () => {
   const [redirect, setRedirect] = useState(false);
   const [showRouteModal, setShowRouteModal] = useState(false);
   const [showFileModal, setShowFileModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   const [routeModalContent, setRouteModalContent] = useState("");
   const [fileModalContent, setFileModalContent] = useState("");
   const [showRouteDetails, setShowRouteDetails] = useState(false);
@@ -31,7 +33,7 @@ const Dashboard = () => {
   const [routeTableData, setRouteTableData] = useState([]);
 
   useEffect(() => {
-    document.body.style = `background: var(--background-color)`;
+    document.body.style = `background: var(--base-color)`;
     const fetchUser = async () => {
       const response = await fetch("http://localhost:8000/api/user", {
         headers: { "Content-Type": "application/json" },
@@ -67,14 +69,6 @@ const Dashboard = () => {
     const response = await fetch();
   };
 
-  const userLogout = async () => {
-    await fetch("http://localhost:8000/api/logout", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-  };
-
   const handleCheckbox = (e, content) => {
     if (e.target.checked) {
       setRoutes((oldArray) => [...oldArray, content]);
@@ -107,6 +101,7 @@ const Dashboard = () => {
                 fileTableData.filter((file) => file.id != deletedFile.id)
               );
 
+              // Update deleted routes after file delete (delete cascade set)
               let updatedRouteTableData = [];
               routeTableData.forEach((route) => {
                 let flag = false;
@@ -120,8 +115,21 @@ const Dashboard = () => {
             }}
           />
         )}
+        {showUploadModal && (
+          <UploadModal
+            hideUploadModal={() => setShowUploadModal(!showUploadModal)}
+            setTableData={(fileData, routeData) => {
+              setFileTableData((oldData) => [...oldData, fileData]);
+              routeData.forEach((route) =>
+                setRouteTableData((oldData) => [...oldData, route])
+              );
+            }}
+          />
+        )}
         <div className="dashboard__nav">
-          <NavBar logout={userLogout} user={user} />
+          <NavBar
+            showUploadModal={() => setShowUploadModal(!showUploadModal)}
+          />
         </div>
         <div className="dashboard__section">
           <div className="dashboard__section--left">
@@ -144,14 +152,6 @@ const Dashboard = () => {
                 //TODO: call getFileRoutes
               }}
               fileData={fileTableData}
-            />
-            <UploadForm
-              setTableData={(fileData, routeData) => {
-                setFileTableData((oldData) => [...oldData, fileData]);
-                routeData.forEach((route) =>
-                  setRouteTableData((oldData) => [...oldData, route])
-                );
-              }}
             />
           </div>
           <div className="dashboard__section--right">

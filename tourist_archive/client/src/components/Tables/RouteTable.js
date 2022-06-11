@@ -27,12 +27,15 @@ const RouteTable = (props) => {
                 <tr key={route["id"]}>
                   <td>{route["properties"]["title"]}</td>
                   <td>{route["properties"]["route_name"]}</td>
-                  {console.log(route.properties)}
                   <td>{formatDate(route["properties"]["created_at"])}</td>
                   <td>
-                    <button onClick={() => props.toggleModal(route)}>
-                      Open
-                    </button>
+                    <img
+                      src="../../../static/images/detail.png"
+                      alt="detail"
+                      width="20"
+                      height="20"
+                      onClick={() => props.toggleModal(route)}
+                    />
                   </td>
                   <td>
                     <input
