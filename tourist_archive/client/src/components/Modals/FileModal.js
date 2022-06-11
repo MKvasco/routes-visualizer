@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import "./modals.css";
 
 const FileModal = (props) => {
+  const getFile = async (file_id) => {
+    const fileResponse = await fetch(
+      `http://localhost:8000/api/files/${file_id}/`
+    );
+    const file = await fileResponse.json();
+    const routesResponse = await fetch(
+      `http://localhost:8000/api/${file_id}/routes`
+    );
+    const routes = await routesResponse.json();
+    props.deleteDataFromTables(file, routes);
+  };
+
   const deleteFile = async (file_id) => {
+    getFile(file_id);
     await fetch(`http://localhost:8000/api/files/${file_id}/`, {
       method: "delete",
     });
@@ -18,7 +31,7 @@ const FileModal = (props) => {
             onClick={() => {
               deleteFile(props.content.id);
               props.toggleModal();
-              setTimeout(() => props.toggleUpdate(), 200);
+              // props.deleteFileFromTable(deletedFile);
             }}
           >
             Delete

@@ -18,7 +18,6 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [toggleUpdate, setToggleUpdate] = useState(false);
   const [showRouteModal, setShowRouteModal] = useState(false);
   const [showFileModal, setShowFileModal] = useState(false);
   const [routeModalContent, setRouteModalContent] = useState("");
@@ -28,6 +27,8 @@ const Dashboard = () => {
   const [routes, setRoutes] = useState([]);
   const [removeRoute, setRemoveRoute] = useState(false);
   const [showFileRoutes, setShowFileRoutes] = useState(false);
+  const [fileTableData, setFileTableData] = useState([]);
+  const [routeTableData, setRouteTableData] = useState([]);
 
   useEffect(() => {
     document.body.style = `background: var(--background-color)`;
@@ -43,12 +44,30 @@ const Dashboard = () => {
     fetchUser();
   }, []);
 
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      const response = await fetch("http://localhost:8000/api/user/routes");
+      const content = await response.json();
+      if (!content.detail) setRouteTableData(content["features"]);
+    };
+    fetchRoutes();
+  }, []);
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      const response = await fetch("http://localhost:8000/api/user/files");
+      const content = await response.json();
+      if (!content.detail) setFileTableData(content);
+    };
+    fetchFiles();
+  }, []);
+
   //TODO: fetch routes from file id
   const getFileRoutes = async (content) => {
     const response = await fetch();
   };
 
-  const logout = async () => {
+  const userLogout = async () => {
     await fetch("http://localhost:8000/api/logout", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -77,18 +96,32 @@ const Dashboard = () => {
               setHideRouteDetails(routeModalContent);
               setShowRouteDetails(false);
             }}
-            toggleUpdate={() => setToggleUpdate(!toggleUpdate)}
           />
         )}
         {showFileModal && (
           <FileModal
             content={fileModalContent}
             toggleModal={() => setShowFileModal(!showFileModal)}
-            toggleUpdate={() => setToggleUpdate(!toggleUpdate)}
+            deleteDataFromTables={(deletedFile, deletedRoutes) => {
+              setFileTableData(
+                fileTableData.filter((file) => file.id != deletedFile.id)
+              );
+
+              let updatedRouteTableData = [];
+              routeTableData.forEach((route) => {
+                let flag = false;
+                deletedRoutes.features.forEach((deletedRoute) => {
+                  if (route.id == deletedRoute.id) flag = true;
+                });
+                if (!flag) updatedRouteTableData.push(route);
+              });
+
+              setRouteTableData(updatedRouteTableData);
+            }}
           />
         )}
         <div className="dashboard__nav">
-          <NavBar logout={logout} user={user} />
+          <NavBar logout={userLogout} user={user} />
         </div>
         <div className="dashboard__section">
           <div className="dashboard__section--left">
@@ -102,7 +135,7 @@ const Dashboard = () => {
               addRoute={(e, content, index) => {
                 handleCheckbox(e, content, index);
               }}
-              toggleUpdate={toggleUpdate}
+              routeData={routeTableData}
             />
             <FileTable
               toggleModal={(content) => {
@@ -110,9 +143,16 @@ const Dashboard = () => {
                 setFileModalContent(content);
                 //TODO: call getFileRoutes
               }}
-              toggleUpdate={toggleUpdate}
+              fileData={fileTableData}
             />
-            <UploadForm />
+            <UploadForm
+              setTableData={(fileData, routeData) => {
+                setFileTableData((oldData) => [...oldData, fileData]);
+                routeData.forEach((route) =>
+                  setRouteTableData((oldData) => [...oldData, route])
+                );
+              }}
+            />
           </div>
           <div className="dashboard__section--right">
             <MapApp

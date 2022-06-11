@@ -15,6 +15,7 @@ urlpatterns = [
     path('user', views.user_current),
     path('user/files', views.user_current_files),
     path('user/routes', views.user_current_routes),
+    path('<int:pk>/routes', views.file_routes),
 ]
 
 urlpatterns += router.urls

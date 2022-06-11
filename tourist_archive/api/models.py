@@ -59,7 +59,7 @@ class RouteModel(models.Model):
   description = models.TextField(default="undescribed", blank=True ,null=True)
   color = models.CharField(max_length=16, default="#fffff", blank=False, null=False)
   width = models.IntegerField(default=5, blank=False, null=True)
-  file_id = models.ForeignKey(FileModel, on_delete=models.CASCADE, blank=False, null=False)
+  file = models.ForeignKey(FileModel, on_delete=models.CASCADE, blank=False, null=False)
   points_line = models.LineStringField(srid=4326, blank=False, null=False)
   created_at = models.DateTimeField(auto_now_add=True)
 

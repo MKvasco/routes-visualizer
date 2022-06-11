@@ -1,0 +1,11 @@
+.uploadForm {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.uploadForm__content {
+}
+
+.uploadForm h3 {
+  font-weight: 500;
+}

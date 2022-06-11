@@ -141,7 +141,7 @@ REST_FRAMEWORK = {
 # Cors module config
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:3000",
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True        # To allow all frontend ports to access app

@@ -89,12 +89,14 @@ class Users(APIView):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 ### Functional API Views
-# TODO: get routes from file ID
-# @api_view(['get'])
-# def file_routes(request, pk=None):
-#   queryset = FileModel.objects.all()
-#   file = get_object_or_404(queryset, pk=pk)
 
+@api_view(['get'])
+def file_routes(request, pk=None):
+  queryset = FileModel.objects.all()
+  file = get_object_or_404(queryset, pk=pk)
+  routes = RouteModel.objects.filter(file=file)
+  serializer = RouteSerializer(routes, many=True)
+  return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['get'])
 def user_current(request):

@@ -3,13 +3,9 @@ import React, { useState } from "react";
 import "./modals.css";
 
 const RouteModal = (props) => {
-  const [title, setTitle] = useState(
-    props.content.properties.title ? props.content.properties : ""
-  );
+  const [title, setTitle] = useState(props.content.properties.title);
   const [description, setDescription] = useState(
     props.content.properties.description
-      ? props.content.properties.descripton
-      : ""
   );
 
   const deleteRoute = async (route_id) => {
@@ -46,7 +42,6 @@ const RouteModal = (props) => {
             onClick={() => {
               deleteRoute(props.content.id);
               props.toggleModal();
-              setTimeout(() => props.toggleUpdate(), 200);
             }}
           >
             Delete

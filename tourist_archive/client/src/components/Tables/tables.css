@@ -1,0 +1,78 @@
+/* Table containing routes */
+
+.routeTable {
+  width: 90%;
+  margin: 1rem auto;
+}
+.routeTable table {
+  width: 100%;
+}
+
+.routeTable table,
+.routeTable th,
+.routeTable td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.routeTable input {
+  margin-top: 0.25rem;
+  width: 20px;
+  height: 20px;
+}
+
+.routeTablee button {
+  width: 50px;
+}
+
+/* Defining columns */
+.routeTable table > tbody > tr > :nth-child(1),
+.routeTable table > tbody > tr > :nth-child(2),
+.routeTable table > tbody > tr > :nth-child(3) {
+  width: 100px;
+}
+
+.routeTable table > tbody > tr > :nth-child(4),
+.routeTable table > tbody > tr > :nth-child(5) {
+  width: 50px;
+}
+.routeTable table > tbody > tr > :nth-child(4) {
+  padding: 0;
+}
+.routeTable table > tbody > tr > :nth-child(5) {
+  padding: 0;
+}
+
+/* Table containing files */
+
+.fileTable {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.fileTable table {
+  width: 100%;
+}
+
+.fileTable table,
+.fileTable th,
+.fileTable td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+/* Combined */
+
+.routeTable th,
+.fileTable th {
+  height: 30px;
+  background-color: var(--modal-color);
+}
+
+.routeTable th,
+.routeTable td,
+.fileTable th,
+.fileTable td {
+  text-align: center;
+  padding: 0.2rem;
+}
