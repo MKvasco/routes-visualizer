@@ -1,6 +1,6 @@
 .footer__main {
   display: flex;
-  background-color: var(--foreground-color);
+  background-color: var(--accent-color);
   justify-content: space-between;
   align-items: center;
   height: 100%;

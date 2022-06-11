@@ -62,7 +62,7 @@
 .routeTable thead,
 .fileTable thead {
   position: sticky;
-  top: 0px;
+  top: -1px;
 }
 
 .routeTable td,

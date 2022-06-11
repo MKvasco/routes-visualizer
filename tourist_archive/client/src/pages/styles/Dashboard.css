@@ -6,14 +6,14 @@
 .dashboard__nav {
   position: absolute;
   width: 100%;
-  height: 4%;
+  height: 40px;
   z-index: 0;
 }
 .dashboard__footer {
   position: absolute;
   width: 100%;
   z-index: 0;
-  height: 2.5%;
+  height: 20px;
   bottom: 0;
 }
 
