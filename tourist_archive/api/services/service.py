@@ -5,6 +5,7 @@ from ..models import RouteModel
 
 ### Services
 
+# !!!FORMAT!!! -> dictionary[track_name][array of point objects]
 def create_routes(routes_data, file_data):
   file = FileModel.objects.get(pk=file_data['id'])
   for route_name in routes_data:

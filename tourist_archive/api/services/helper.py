@@ -9,7 +9,7 @@ def get_file_path(file_name):
   module_dir = module_dir.replace('api/services', 'data')
   file_path = os.path.join(module_dir, file_name)
 
-  # Check if gpx file exists and is not empty
+  # Check if file exists and is not empty
   validated = validate_file(file_path, True)
   if validated == 1: return "The file is empty!"
   if validated == 2: return "Error, the file could not be uploaded"

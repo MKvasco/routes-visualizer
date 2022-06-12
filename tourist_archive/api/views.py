@@ -32,9 +32,10 @@ class FileViewSet(viewsets.ViewSet):
       serializer.save(user=user)
       response = parse_file(serializer.data)
       # File validation based if content corresponds with filetype
-      # TODO: Delete file when error occurs
       if(response == 200): return Response(serializer.data, status=status.HTTP_201_CREATED)
-      if(response == 400): return Response(status=status.HTTP_400_BAD_REQUEST)
+      if(response == 400): 
+        os.remove(serializer.data['file'][1:])
+        return Response({"message": "The file content is not valid!"} ,status=status.HTTP_400_BAD_REQUEST)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
   def retrieve(self, request, pk=None):
@@ -53,6 +54,7 @@ class FileViewSet(viewsets.ViewSet):
   def destroy(self, request, pk=None):
     file = get_object_or_404(self.queryset, pk=pk)
     file.delete()
+    print(file)
     os.remove(str(file))
     return Response(status=status.HTTP_204_NO_CONTENT)
 

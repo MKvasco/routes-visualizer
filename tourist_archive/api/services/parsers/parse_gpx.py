@@ -9,16 +9,16 @@ from ..helper import get_file_path
 
 def parse_gpx_file(file_data):
   file_path = get_file_path(file_data['file'])
-  # TODO: evaluate file if it is in correct form -> if not return int 400
+  # TODO: validate file if it is in correct form -> if not return int 400
   with open(file_path, 'r', encoding='utf-8') as gpx_file:
     gpx = gpxpy.parse(gpx_file)
   
   # Validate if file has tracks
-  if(len(gpx.tracks) == 0): return 400
+  if gpx.tracks is None: return 400
+  if len(gpx.tracks) == 0: return 400
 
 
-  # Parsing route data
-  # format -> dictionary[track_name][array of point objects]
+  # Parsing route data 
   routes_data = defaultdict(list)
 
   for track in gpx.tracks:

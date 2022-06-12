@@ -61,7 +61,7 @@ class RouteModel(models.Model):
   # TODO: check how to update modified_at after upadte
   route_width = models.IntegerField(blank=False, null=False, default=5)
   route_color = models.CharField(max_length=16, blank=False, null=False, default="#fffff")
-  modified_at = models.DateTimeField(blank=True, null=True)
+  modified_at = models.DateTimeField(auto_now_add=True)
 
   # Route info
   route_name = models.CharField(max_length=32, blank=True, null=True, default="N/a")

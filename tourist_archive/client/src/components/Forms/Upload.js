@@ -4,6 +4,7 @@ import "./styles/upload.css";
 
 const Upload = (props) => {
   const [file, setFile] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
 
   const postFile = async (e) => {
     e.preventDefault();
@@ -17,14 +18,19 @@ const Upload = (props) => {
     });
     const fileData = await fileResponse.json();
 
-    //Fetch routes of posted file
-    const routeResponse = await fetch(
-      `http://localhost:8000/api/${fileData["id"]}/routes`
-    );
-    const routeData = await routeResponse.json();
+    if (fileData.message) {
+      setErrorMessage(fileData.message);
+    } else {
+      // Fetch routes of posted file
+      const routeResponse = await fetch(
+        `http://localhost:8000/api/${fileData["id"]}/routes`
+      );
+      const routeData = await routeResponse.json();
 
-    //Send data to parent
-    props.setTableData(fileData, routeData["features"]);
+      //Send data to parent
+      props.setTableData(fileData, routeData["features"]);
+      setErrorMessage(false);
+    }
     setFile(false);
   };
 
@@ -59,7 +65,10 @@ const Upload = (props) => {
             <div className="uploadForm__uploadImage">
               <label
                 onChange={(e) =>
-                  setTimeout(() => setFile(e.target.files[0]), 50)
+                  setTimeout(() => {
+                    setFile(e.target.files[0]);
+                    setErrorMessage(false);
+                  }, 50)
                 }
                 htmlFor="fileUpload"
               >
@@ -72,8 +81,11 @@ const Upload = (props) => {
                 />
               </label>
             </div>
+            <div className="uploadForm__errorMessage">
+              {errorMessage && <p>{errorMessage}</p>}
+            </div>
             <div className="uploadForm__uploadInfo">
-              {!file && <p>Select a file to upload routes</p>}
+              {!file && !errorMessage && <p>Select a file to upload routes</p>}
             </div>
           </div>
         </div>
