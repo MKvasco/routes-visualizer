@@ -58,5 +58,5 @@ class FileSerializer(BaseSerializer):
 class RouteSerializer(GeoFeatureModelSerializer):
   class Meta:
     model = RouteModel
-    geo_field = "points_line"
+    geo_field = "route_line_string"
     fields = '__all__'

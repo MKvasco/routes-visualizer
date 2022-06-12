@@ -27,11 +27,14 @@ class FileViewSet(viewsets.ViewSet):
 
   def create(self, request):
     user = get_current_user(request)
-    serializer = FileSerializer(data=request.data, fields=('id', 'file', 'user_id', 'timestamp'))
+    serializer = FileSerializer(data=request.data, fields=('id', 'file', 'user', 'timestamp'))
     if serializer.is_valid():
-      serializer.save(user_id=user)
-      parse_file(serializer.data)
-      return Response(serializer.data, status=status.HTTP_201_CREATED)
+      serializer.save(user=user)
+      response = parse_file(serializer.data)
+      # File validation based if content corresponds with filetype
+      # TODO: Delete file when error occurs
+      if(response == 200): return Response(serializer.data, status=status.HTTP_201_CREATED)
+      if(response == 400): return Response(status=status.HTTP_400_BAD_REQUEST)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
   def retrieve(self, request, pk=None):

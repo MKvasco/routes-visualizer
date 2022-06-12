@@ -58,7 +58,9 @@ const Upload = (props) => {
           <div className="uploadForm__upload">
             <div className="uploadForm__uploadImage">
               <label
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={(e) =>
+                  setTimeout(() => setFile(e.target.files[0]), 50)
+                }
                 htmlFor="fileUpload"
               >
                 <input name="file" type="file" id="fileUpload" hidden />

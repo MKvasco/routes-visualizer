@@ -41,9 +41,7 @@ class UserModel(AbstractUser, PermissionsMixin):
 class FileModel(models.Model):
   id = models.AutoField(primary_key=True)
   file = models.FileField(upload_to='data/imports', blank=False, null=False)
-  #TODO: mozem osetrit import z frontendu takto?
-  # type = models.CharField(max_length=16, null=False, blank=False)
-  user_id = models.ForeignKey(UserModel, on_delete=models.CASCADE, blank=False, null=True)
+  user = models.ForeignKey(UserModel, on_delete=models.CASCADE, blank=False, null=True)
   timestamp = models.DateTimeField(auto_now_add=True)
 
   class Meta:
@@ -53,24 +51,27 @@ class FileModel(models.Model):
     return '%s' % (self.file)
   
 class RouteModel(models.Model):
+  # Primary key
   id = models.AutoField(primary_key=True)
-  route_name = models.CharField(max_length=32, default="N/A", blank=True, null=True)
-  title = models.CharField(max_length=32, default="untitled", blank=True, null=True)
-  description = models.TextField(default="undescribed", blank=True ,null=True)
-  color = models.CharField(max_length=16, default="#fffff", blank=False, null=False)
-  width = models.IntegerField(default=5, blank=False, null=True)
+
+  # User specifications
+  title = models.CharField(max_length=32, blank=True, null=True, default="untitled")
+  description = models.TextField(blank=True ,null=True, default="undescribed")
   file = models.ForeignKey(FileModel, on_delete=models.CASCADE, blank=False, null=False)
-  points_line = models.LineStringField(srid=4326, blank=False, null=False)
-  created_at = models.DateTimeField(auto_now_add=True)
+  # TODO: check how to update modified_at after upadte
+  route_width = models.IntegerField(blank=False, null=False, default=5)
+  route_color = models.CharField(max_length=16, blank=False, null=False, default="#fffff")
+  modified_at = models.DateTimeField(blank=True, null=True)
+
+  # Route info
+  route_name = models.CharField(max_length=32, blank=True, null=True, default="N/a")
+  route_line_string = models.LineStringField(srid=4326, blank=False, null=False)
+  route_points_count = models.IntegerField(blank=False, null=False)
+  elevation_min = models.FloatField(null=True, blank=False)
+  elevation_max = models.FloatField(null=True, blank=False)
+  started_at = models.DateTimeField(null=True, blank=False)
+  ended_at = models.DateTimeField(null=True, blank=False)
 
   class Meta:
     db_table = "route_model"
-
-  # https://docs.djangoproject.com/en/4.0/ref/contrib/postgres/fields/#arrayfield
-  # pieces = ArrayField(ArrayField(models.IntegerField()))
-  # from django.contrib.postgres.fields import ArrayField
-  #TODO: make calculations -> duration, time start end , elevation gain, elevation loss, elevation overall etc...
-  def get_duration():
-    pass
-
-
+  

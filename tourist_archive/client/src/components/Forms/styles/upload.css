@@ -13,10 +13,14 @@
 }
 
 .uploadForm__uploadImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: var(--main-color);
   border-radius: 0.5rem;
   padding: 1rem;
 }
+
 .uploadForm__uploadImage:hover {
   transform: scale(1.05);
   transition: ease-in-out 200ms;
@@ -33,4 +37,19 @@
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
+}
+
+.uploadForm__fileInfo button {
+  height: 1.5rem;
+  margin-top: 0.5rem;
+  color: var(--base-color);
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.uploadForm__fileInfo button:hover {
+  background-color: var(--green);
+  transform: scale(1.05);
+  transition: ease-in-out 150ms;
 }
