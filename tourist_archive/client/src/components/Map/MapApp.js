@@ -15,7 +15,9 @@ const MapApp = (props) => {
   const [zoom, setZoom] = useState(1);
   const [center, setCenter] = useState([0, 0]);
   const [view, setView] = useState();
-  const [routesFeature, setRoutesFeature] = useState(new Feature());
+  const [multiLineFeature, setMultiLineFeature] = useState(false);
+  const [actualRouteFeature, setActualRouteFeature] = useState(false);
+  const [tmpFeatures, setTmpFeatures] = useState([]);
   const [routes, setRoutes] = useState();
   const [featuresLayer, setFeaturesLayer] = useState();
   const mapElement = useRef();
@@ -23,7 +25,7 @@ const MapApp = (props) => {
   useEffect(() => {
     const initFeaturesLayer = new VectorLayer({
       source: new VectorSource({
-        features: [routesFeature],
+        features: [],
       }),
     });
 
@@ -51,13 +53,15 @@ const MapApp = (props) => {
 
   useEffect(() => {
     if (props.showRoute) {
+      // Create feature to show
       let feature = new Feature();
       let coordinates = [];
       props.showRoute.geometry.coordinates.forEach((coordinate) => {
         coordinates.push(fromLonLat(coordinate));
       });
-      let color = "#fffff";
-      let width = 5;
+
+      const color = props.showRoute.properties.route_color;
+      const width = props.showRoute.properties.route_width;
 
       feature.setId(props.showRoute.id);
       feature.setGeometry(new LineString(coordinates));
@@ -69,35 +73,111 @@ const MapApp = (props) => {
           }),
         })
       );
-      featuresLayer.getSource().removeFeature(routesFeature);
+
+      if (!actualRouteFeature) {
+        // Save previous features before removing from map
+        setTmpFeatures(featuresLayer.getSource().getFeatures());
+
+        // Remove features from map
+        featuresLayer
+          .getSource()
+          .getFeatures()
+          .forEach((feature) => {
+            featuresLayer.getSource().removeFeature(feature);
+          });
+
+        // Remove multiLine Feature
+        if (multiLineFeature)
+          featuresLayer.getSource().removeFeature(multiLineFeature);
+      }
+
+      // Updating actual route when updating values in modal
+      if (actualRouteFeature) {
+        featuresLayer.getSource().removeFeature(actualRouteFeature);
+      }
+      setActualRouteFeature(feature);
+
+      // Add current feature to map
       featuresLayer.getSource().addFeature(feature);
       view.fit(feature.getGeometry(), { padding: [100, 100, 100, 100] });
+      console.log(featuresLayer.getSource().getFeatures(), "SHOW");
     }
   }, [props.showRoute]);
 
   useEffect(() => {
     if (props.hideRoute) {
+      console.log(featuresLayer.getSource().getFeatures(), "HIDE");
+      // Centering and zooming to previous values
       view.setCenter(center);
       view.setZoom(zoom);
-      let feature = featuresLayer
-        .getSource()
-        .getFeatureById(props.hideRoute.id);
-      featuresLayer.getSource().removeFeature(feature);
-      featuresLayer.getSource().addFeature(routesFeature);
-      if (
-        routesFeature.getGeometry() &&
-        routesFeature.getGeometry().flatCoordinates.length > 0
-      ) {
-        view.fit(routesFeature.getGeometry(), {
-          padding: [100, 100, 100, 100],
-        });
+
+      // Deleting feature from detail modal
+      featuresLayer.getSource().removeFeature(actualRouteFeature);
+      setActualRouteFeature(false);
+
+      // Adding back features from before
+      tmpFeatures.forEach((feature) => {
+        if (feature.id_ == actualRouteFeature.id_) {
+          featuresLayer.getSource().addFeature(actualRouteFeature);
+        } else {
+          featuresLayer.getSource().addFeature(feature);
+        }
+      });
+      console.log(featuresLayer.getSource().getFeatures());
+
+      // Adding back multiLine feature and fittint to view
+      if (multiLineFeature) {
+        featuresLayer.getSource().addFeature(multiLineFeature);
+        if (
+          multiLineFeature.getGeometry() &&
+          multiLineFeature.getGeometry().flatCoordinates.length > 0
+        ) {
+          view.fit(multiLineFeature.getGeometry(), {
+            padding: [100, 100, 100, 100],
+          });
+        }
       }
     }
   }, [props.hideRoute]);
 
   useEffect(() => {
-    //TODO: make each route unique color ( read from db )
-    if (props.addRoutes) {
+    if (props.addRoute) {
+      let feature = new Feature();
+      let coordinates = [];
+      props.addRoute.geometry.coordinates.forEach((coordinate) => {
+        coordinates.push(fromLonLat(coordinate));
+      });
+
+      const color = props.addRoute.properties.route_color;
+      const width = props.addRoute.properties.route_width;
+
+      feature.setId(props.addRoute.id);
+      feature.setGeometry(new LineString(coordinates));
+      feature.setStyle(
+        new Style({
+          zIndex: featuresLayer.getSource().getFeatures().length,
+          stroke: new Stroke({
+            color: color,
+            width: width,
+          }),
+        })
+      );
+      featuresLayer.getSource().addFeature(feature);
+    }
+  }, [props.addRoute]);
+
+  useEffect(() => {
+    if (props.removeRoute) {
+      let feature = featuresLayer
+        .getSource()
+        .getFeatureById(props.removeRoute.id);
+      featuresLayer.getSource().removeFeature(feature);
+    }
+  }, [props.removeRoute]);
+
+  useEffect(() => {
+    /*
+ if (props.addRoutes) {
       let lineStrings = [];
 
       props.addRoutes.forEach((route) => {
@@ -108,30 +188,29 @@ const MapApp = (props) => {
         lineStrings.push(new LineString(coordinates));
       });
 
-      const color = "#fffff";
-      const width = 5;
-
       routesFeature.setStyle(
         new Style({
           stroke: new Stroke({
-            color: color,
-            width: width,
+            color: "#fffff",
+            width: 5,
           }),
         })
       );
 
       setRoutes(new MultiLineString(lineStrings));
     }
-  }, [props.addRoutes]);
+    props.showRoutes
+    */
+  }, []);
 
   useEffect(() => {
-    if (routes) {
-      routesFeature.setGeometry(routes);
+    if (routes && multiLineFeature) {
+      multiLineFeature.setGeometry(routes);
       if (
-        routesFeature.getGeometry() &&
-        routesFeature.getGeometry().flatCoordinates.length > 0
+        multiLineFeature.getGeometry() &&
+        multiLineFeature.getGeometry().flatCoordinates.length > 0
       ) {
-        view.fit(routesFeature.getGeometry(), {
+        view.fit(multiLineFeature.getGeometry(), {
           padding: [100, 100, 100, 100],
         });
       } else {

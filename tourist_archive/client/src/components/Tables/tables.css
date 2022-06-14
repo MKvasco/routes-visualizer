@@ -15,21 +15,10 @@
 }
 
 /* Defining columns */
-.routeTable table > tbody > tr > :nth-child(1),
-.routeTable table > tbody > tr > :nth-child(2),
-.routeTable table > tbody > tr > :nth-child(3) {
-  width: 100px;
-}
 
-.routeTable table > tbody > tr > :nth-child(4),
-.routeTable table > tbody > tr > :nth-child(5) {
-  width: 50px;
-}
+.routeTable table > tbody > tr > :nth-child(3),
 .routeTable table > tbody > tr > :nth-child(4) {
-  padding: 0;
-}
-.routeTable table > tbody > tr > :nth-child(5) {
-  padding: 0;
+  width: 70px;
 }
 
 /* Table containing files */
@@ -45,10 +34,7 @@
 
 /* Defining columns */
 .fileTable table > tbody > tr > :nth-child(3) {
-  width: 50px;
-}
-.fileTable table > tbody > tr > :nth-child(3) {
-  padding: 0;
+  width: 70px;
 }
 
 /* Combined */
@@ -93,7 +79,7 @@
 .routeTable td,
 .fileTable td {
   text-align: center;
-  padding: 0.3rem;
+  height: 30px;
 }
 .routeTable img,
 .fileTable img {

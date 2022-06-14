@@ -26,7 +26,12 @@ const FileModal = (props) => {
     <>
       <div className="modal__container">
         <div className="modal">
-          <button onClick={() => props.toggleModal()}>Close</button>
+          <button
+            className="modal__closeButton"
+            onClick={() => props.toggleModal()}
+          >
+            X
+          </button>
           <button
             onClick={() => {
               deleteFile(props.content.id);

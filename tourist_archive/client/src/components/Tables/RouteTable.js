@@ -5,7 +5,16 @@ import "./tables.css";
 const RouteTable = (props) => {
   const formatDate = (date) => {
     let localDate = new Date(date);
-    return localDate.toLocaleDateString();
+    let currentDate = new Date();
+    if (
+      localDate.getDay() == currentDate.getDay() &&
+      localDate.getMonth() == currentDate.getMonth() &&
+      localDate.getFullYear() == currentDate.getFullYear()
+    ) {
+      return localDate.toLocaleTimeString();
+    } else {
+      return localDate.toLocaleString();
+    }
   };
 
   return (
@@ -15,7 +24,6 @@ const RouteTable = (props) => {
           <thead>
             <tr>
               <th>Title</th>
-              <th>Name</th>
               <th>Modified</th>
               <th>Detail</th>
               <th>Show</th>
@@ -26,7 +34,6 @@ const RouteTable = (props) => {
               props.routeData.map((route) => (
                 <tr key={route["id"]}>
                   <td>{route["properties"]["title"]}</td>
-                  <td>{route["properties"]["route_name"]}</td>
                   <td>{formatDate(route["properties"]["modified_at"])}</td>
                   <td>
                     <img
@@ -40,7 +47,7 @@ const RouteTable = (props) => {
                   <td>
                     <input
                       type="checkbox"
-                      onChange={(e) => props.addRoute(e, route)}
+                      onChange={(e) => props.handleCheckbox(e, route)}
                     />
                   </td>
                 </tr>

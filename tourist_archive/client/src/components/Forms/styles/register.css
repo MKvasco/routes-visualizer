@@ -57,6 +57,12 @@
   font-size: 16px;
 }
 
+.registerForm__error {
+  margin: 0 !important;
+  margin-top: 0.5rem;
+  color: red;
+}
+
 .registerForm--registerContainer p > a {
   color: var(--blue);
 }

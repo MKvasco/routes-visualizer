@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import "./styles/Dashboard.css";
 
 // Components
 
-import UploadForm from "../components/Forms/Upload";
 import MapApp from "../components/Map/MapApp";
 import FileTable from "../components/Tables/FileTable";
 import RouteTable from "../components/Tables/RouteTable";
@@ -19,16 +18,20 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState("");
   const [redirect, setRedirect] = useState(false);
+
   const [showRouteModal, setShowRouteModal] = useState(false);
   const [showFileModal, setShowFileModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
+
   const [routeModalContent, setRouteModalContent] = useState("");
   const [fileModalContent, setFileModalContent] = useState("");
+
+  const [routes, setRoutes] = useState([]);
+  const [addRoute, setAddRoute] = useState(false);
+  const [removeRoute, setRemoveRoute] = useState(false);
   const [showRouteDetails, setShowRouteDetails] = useState(false);
   const [hideRouteDetails, setHideRouteDetails] = useState(false);
-  const [routes, setRoutes] = useState([]);
-  const [removeRoute, setRemoveRoute] = useState(false);
-  const [showFileRoutes, setShowFileRoutes] = useState(false);
+
   const [fileTableData, setFileTableData] = useState([]);
   const [routeTableData, setRouteTableData] = useState([]);
 
@@ -71,6 +74,16 @@ const Dashboard = () => {
 
   const handleCheckbox = (e, content) => {
     if (e.target.checked) {
+      setAddRoute(content);
+      setRemoveRoute(false);
+    } else {
+      setRemoveRoute(content);
+      setAddRoute(false);
+    }
+  };
+
+  const visualizeAllRoutes = () => {
+    if (e.target.checked) {
       setRoutes((oldArray) => [...oldArray, content]);
     } else {
       setRoutes(routes.filter((route) => route.id != content.id));
@@ -85,6 +98,11 @@ const Dashboard = () => {
         {showRouteModal && (
           <RouteModal
             content={routeModalContent}
+            routesData={routeTableData}
+            updateRoutesData={(newRouteTableData, newRouteData) => {
+              setRouteTableData(newRouteTableData);
+              setShowRouteDetails(newRouteData);
+            }}
             toggleModal={() => {
               setShowRouteModal(!showRouteModal);
               setHideRouteDetails(routeModalContent);
@@ -140,7 +158,7 @@ const Dashboard = () => {
                 setShowRouteDetails(content);
                 setHideRouteDetails(false);
               }}
-              addRoute={(e, content, index) => {
+              handleCheckbox={(e, content, index) => {
                 handleCheckbox(e, content, index);
               }}
               routeData={routeTableData}
@@ -156,10 +174,12 @@ const Dashboard = () => {
           </div>
           <div className="dashboard__section--right">
             <MapApp
+              //UPDATE route after change of width or color
+              addRoute={addRoute}
+              removeRoute={removeRoute}
               showRoute={showRouteDetails}
               hideRoute={hideRouteDetails}
-              addRoutes={routes}
-              removeRoute={removeRoute}
+              showRoutes={routes}
             />
           </div>
         </div>

@@ -60,3 +60,4 @@ class RouteSerializer(GeoFeatureModelSerializer):
     model = RouteModel
     geo_field = "route_line_string"
     fields = '__all__'
+    read_only_fields = ['id', 'file', 'route_line_string', 'route_points_count']

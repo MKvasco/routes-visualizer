@@ -10,7 +10,12 @@ const UploadModal = (props) => {
     <>
       <div className="modal__uploadContainer">
         <div className="modal__upload">
-          <button onClick={() => props.hideUploadModal()}>Close</button>
+          <button
+            className="modal__closeButton"
+            onClick={() => props.hideUploadModal()}
+          >
+            X
+          </button>
           <UploadForm
             setTableData={(fileData, routeData) =>
               props.setTableData(fileData, routeData)

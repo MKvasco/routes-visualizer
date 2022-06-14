@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "./styles/register.css";
 
@@ -6,10 +7,14 @@ const Register = (props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [redirect, setRedirect] = useState(false);
+  const [error, setError] = useState(false);
+  const navigatee = useNavigate();
 
   const submit = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:8000/api/register", {
+    //Register
+    const registerResponse = await fetch("http://localhost:8000/api/register", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -18,7 +23,27 @@ const Register = (props) => {
         password: password,
       }),
     });
+    const registerResult = await registerResponse.json();
+    if (registerResponse.status == 400) {
+      setRedirect(false);
+      if (registerResult.email)
+        setError("User with this email address already exists!");
+    } else {
+      await fetch("http://localhost:8000/api/login", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+      setError(false);
+      setRedirect(true);
+    }
   };
+
+  if (redirect) setTimeout(() => navigatee("/dashboard"), 50);
 
   return (
     <>
@@ -55,6 +80,7 @@ const Register = (props) => {
             />
 
             <button type="submit">Submit</button>
+            {error && <p className="registerForm__error">{error}</p>}
             <p>
               Already registered? Click{" "}
               <a onClick={() => props.toggleFlag()}>here</a>

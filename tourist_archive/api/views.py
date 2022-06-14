@@ -34,6 +34,10 @@ class FileViewSet(viewsets.ViewSet):
       # File validation based if content corresponds with filetype
       if(response == 200): return Response(serializer.data, status=status.HTTP_201_CREATED)
       if(response == 400): 
+        # Deleting invalid file from db 
+        file = FileModel.objects.filter(id=serializer.data['id'])
+        file.delete()
+        # Deleting invalid file from localstorage
         os.remove(serializer.data['file'][1:])
         return Response({"message": "The file content is not valid!"} ,status=status.HTTP_400_BAD_REQUEST)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -72,6 +76,14 @@ class RouteViewSet(viewsets.ViewSet):
     base_route = get_object_or_404(self.queryset, pk=pk)
     serializer = RouteSerializer(base_route)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+  def update(self, request, pk=None):
+    route = get_object_or_404(self.queryset, pk=pk)
+    serializer = RouteSerializer(route, data=request.data)
+    if serializer.is_valid():
+      serializer.save(modified_at=datetime.datetime.now())
+      return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
   def delete(self, request, pk=None):
     base_route = get_object_or_404(self.queryset, pk=pk)
@@ -178,3 +190,4 @@ def get_current_user_routes(request):
   for file in files:
     queryset |= RouteModel.objects.filter(file_id=file)
   return queryset
+  
