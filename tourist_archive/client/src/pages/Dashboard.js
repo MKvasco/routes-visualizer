@@ -19,14 +19,18 @@ const Dashboard = () => {
   const [user, setUser] = useState("");
   const [redirect, setRedirect] = useState(false);
 
+  const [fileTableData, setFileTableData] = useState([]);
+  const [routeTableData, setRouteTableData] = useState([]);
+
   const [showRouteModal, setShowRouteModal] = useState(false);
   const [showFileModal, setShowFileModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [hideTables, setHideTables] = useState(false);
 
   const [routeModalContent, setRouteModalContent] = useState("");
   const [fileModalContent, setFileModalContent] = useState("");
 
-  const [routes, setRoutes] = useState([]);
+  const [visualizeAllRoutes, setVisualizeAllRoutes] = useState();
   const [addFileRoutes, setAddFileRoutes] = useState(false);
   const [removeFileRoutes, setRemoveFileRoutes] = useState(false);
   const [addRoute, setAddRoute] = useState(false);
@@ -34,9 +38,6 @@ const Dashboard = () => {
   const [showRouteDetails, setShowRouteDetails] = useState(false);
   const [hideRouteDetails, setHideRouteDetails] = useState(false);
   const [zoomRoute, setZoomRoute] = useState(false);
-
-  const [fileTableData, setFileTableData] = useState([]);
-  const [routeTableData, setRouteTableData] = useState([]);
 
   useEffect(() => {
     document.body.style = `background: var(--base-color)`;
@@ -86,11 +87,13 @@ const Dashboard = () => {
     }
   };
 
-  const visualizeAllRoutes = () => {
-    if (e.target.checked) {
-      setRoutes((oldArray) => [...oldArray, content]);
+  const handleVisualizeButton = () => {
+    if (visualizeAllRoutes) {
+      setHideTables(false);
+      setVisualizeAllRoutes(false);
     } else {
-      setRoutes(routes.filter((route) => route.id != content.id));
+      setHideTables(true);
+      setVisualizeAllRoutes(routeTableData);
     }
   };
 
@@ -152,10 +155,19 @@ const Dashboard = () => {
         <div className="dashboard__nav">
           <NavBar
             showUploadModal={() => setShowUploadModal(!showUploadModal)}
+            visualizeAllRoutes={() => {
+              handleVisualizeButton();
+            }}
           />
         </div>
-        <div className="dashboard__section">
-          <div className="dashboard__section--left">
+        <div className={"dashboard__section"}>
+          <div
+            className={
+              hideTables
+                ? "dashboard__section--hide"
+                : "dashboard__section--left"
+            }
+          >
             <RouteTable
               toggleModal={(content) => {
                 setShowRouteModal(!showRouteModal);
@@ -182,17 +194,22 @@ const Dashboard = () => {
               }}
             />
           </div>
-          <div className="dashboard__section--right">
+          <div
+            className={
+              visualizeAllRoutes
+                ? "dashboard__visualizeAll"
+                : "dashboard__section--right"
+            }
+          >
             <MapApp
-              //UPDATE route after change of width or color
               addRoute={addRoute}
               removeRoute={removeRoute}
               showRoute={showRouteDetails}
               hideRoute={hideRouteDetails}
-              showRoutes={routes}
               zoomRoute={zoomRoute}
               addFileRoutes={addFileRoutes}
               removeFileRoutes={removeFileRoutes}
+              visualizeAllRoutes={visualizeAllRoutes}
             />
           </div>
         </div>

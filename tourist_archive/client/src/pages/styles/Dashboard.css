@@ -23,12 +23,25 @@
   width: 100%;
   height: 100%;
 }
+
+.dashboard__section--hide {
+  display: none;
+}
+
 .dashboard__section--right {
   justify-self: flex-end;
   margin: auto 1.5rem auto 0;
   width: 55%;
   height: 80%;
   z-index: 1;
+}
+
+.dashboard__visualizeAll {
+  position: absolute;
+  width: 100%;
+  top: 40px;
+  bottom: 20px;
+  left: 0;
 }
 
 .dashboard__section--left {

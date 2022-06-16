@@ -19,9 +19,7 @@ const NavBar = (props) => {
     <>
       <div className="nav__main">
         <div className="nav__main__controls">
-          <button onClick={() => console.log("visualise all")}>
-            Visualise
-          </button>
+          <button onClick={() => props.visualizeAllRoutes()}>Visualise</button>
           <button onClick={() => props.showUploadModal()}>Upload</button>
           <button onClick={userLogout}>Logout</button>
         </div>

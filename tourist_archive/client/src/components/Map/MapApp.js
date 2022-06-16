@@ -15,7 +15,6 @@ const MapApp = (props) => {
   const [zoom, setZoom] = useState(1);
   const [center, setCenter] = useState([0, 0]);
   const [view, setView] = useState();
-  const [multiLineFeature, setMultiLineFeature] = useState(false);
   const [actualRouteFeature, setActualRouteFeature] = useState(false);
   const [tmpFeatures, setTmpFeatures] = useState([]);
   const [routes, setRoutes] = useState();
@@ -121,7 +120,6 @@ const MapApp = (props) => {
           featuresLayer.getSource().addFeature(feature);
         }
       });
-      console.log(featuresLayer.getSource().getFeatures());
 
       // Adding back multiLine feature and fittint to view
       if (multiLineFeature) {
@@ -230,11 +228,14 @@ const MapApp = (props) => {
   }, [props.removeFileRoutes]);
 
   useEffect(() => {
-    /*
- if (props.addRoutes) {
-      let lineStrings = [];
+    if (props.visualizeAllRoutes) {
+      // Update map size
+      map.updateSize();
 
-      props.addRoutes.forEach((route) => {
+      let lineStrings = [];
+      let multiLineFeature = new Feature();
+
+      props.visualizeAllRoutes.forEach((route) => {
         let coordinates = [];
         route.geometry.coordinates.forEach((coordinate) => {
           coordinates.push(fromLonLat(coordinate));
@@ -242,7 +243,9 @@ const MapApp = (props) => {
         lineStrings.push(new LineString(coordinates));
       });
 
-      routesFeature.setStyle(
+      multiLineFeature.setId("multi");
+      multiLineFeature.setGeometry(new MultiLineString(lineStrings));
+      multiLineFeature.setStyle(
         new Style({
           stroke: new Stroke({
             color: "#fffff",
@@ -250,29 +253,24 @@ const MapApp = (props) => {
           }),
         })
       );
-
-      setRoutes(new MultiLineString(lineStrings));
+      setTmpFeatures(featuresLayer.getSource().getFeatures());
+      featuresLayer.getSource().clear();
+      featuresLayer.getSource().addFeature(multiLineFeature);
+      view.fit(multiLineFeature.getGeometry(), {
+        padding: [200, 200, 200, 200],
+      });
     }
-    props.showRoutes
-    */
-  }, []);
-
-  useEffect(() => {
-    if (routes && multiLineFeature) {
-      multiLineFeature.setGeometry(routes);
-      if (
-        multiLineFeature.getGeometry() &&
-        multiLineFeature.getGeometry().flatCoordinates.length > 0
-      ) {
-        view.fit(multiLineFeature.getGeometry(), {
-          padding: [100, 100, 100, 100],
-        });
-      } else {
-        view.setCenter(center);
-        view.setZoom(zoom);
-      }
+    if (props.visualizeAllRoutes == false) {
+      // Update map size
+      map.updateSize();
+      view.setCenter(center);
+      view.setZoom(zoom);
+      featuresLayer.getSource().clear();
+      tmpFeatures.forEach((feature) => {
+        featuresLayer.getSource().addFeature(feature);
+      });
     }
-  }, [routes]);
+  }, [props.visualizeAllRoutes]);
 
   return <div ref={mapElement} className="map" />;
 };
