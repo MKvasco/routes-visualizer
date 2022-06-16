@@ -31,7 +31,10 @@ const FileTable = (props) => {
                       alt="detail"
                       width="20"
                       height="20"
-                      onClick={() => props.toggleModal(file)}
+                      onClick={() => {
+                        props.showFileRoutes(file);
+                        props.toggleModal(file);
+                      }}
                     />
                   </td>
                 </tr>

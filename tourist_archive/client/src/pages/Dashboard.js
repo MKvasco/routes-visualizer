@@ -27,6 +27,8 @@ const Dashboard = () => {
   const [fileModalContent, setFileModalContent] = useState("");
 
   const [routes, setRoutes] = useState([]);
+  const [addFileRoutes, setAddFileRoutes] = useState(false);
+  const [removeFileRoutes, setRemoveFileRoutes] = useState(false);
   const [addRoute, setAddRoute] = useState(false);
   const [removeRoute, setRemoveRoute] = useState(false);
   const [showRouteDetails, setShowRouteDetails] = useState(false);
@@ -68,9 +70,10 @@ const Dashboard = () => {
     fetchFiles();
   }, []);
 
-  //TODO: fetch routes from file id
-  const getFileRoutes = async (content) => {
-    const response = await fetch();
+  const getFileRoutes = async (file_id) => {
+    const response = await fetch(`http://localhost:8000/api/${file_id}/routes`);
+    const result = await response.json();
+    setAddFileRoutes(result);
   };
 
   const handleCheckbox = (e, content) => {
@@ -115,6 +118,7 @@ const Dashboard = () => {
           <FileModal
             content={fileModalContent}
             toggleModal={() => setShowFileModal(!showFileModal)}
+            removeFileRoutes={() => setRemoveFileRoutes(true)}
             deleteDataFromTables={(deletedFile, deletedRoutes) => {
               setFileTableData(
                 fileTableData.filter((file) => file.id != deletedFile.id)
@@ -169,9 +173,13 @@ const Dashboard = () => {
               toggleModal={(content) => {
                 setShowFileModal(!showFileModal);
                 setFileModalContent(content);
-                //TODO: call getFileRoutes
+                // TODO: call getFileRoutes
               }}
               fileData={fileTableData}
+              showFileRoutes={(file) => {
+                getFileRoutes(file.id);
+                setRemoveFileRoutes(false);
+              }}
             />
           </div>
           <div className="dashboard__section--right">
@@ -183,6 +191,8 @@ const Dashboard = () => {
               hideRoute={hideRouteDetails}
               showRoutes={routes}
               zoomRoute={zoomRoute}
+              addFileRoutes={addFileRoutes}
+              removeFileRoutes={removeFileRoutes}
             />
           </div>
         </div>

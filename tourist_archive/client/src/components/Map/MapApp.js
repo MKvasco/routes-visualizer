@@ -187,6 +187,49 @@ const MapApp = (props) => {
   }, [props.zoomRoute]);
 
   useEffect(() => {
+    if (props.addFileRoutes) {
+      setTmpFeatures(featuresLayer.getSource().getFeatures());
+      featuresLayer.getSource().clear();
+      const multiLineStringToZoom = new MultiLineString([[]]);
+      props.addFileRoutes.features.forEach((route) => {
+        let feature = new Feature();
+        let coordinates = [];
+        route.geometry.coordinates.forEach((coordinate) => {
+          coordinates.push(fromLonLat(coordinate));
+        });
+        const color = route.properties.route_color;
+        const width = route.properties.route_width;
+
+        const lineString = new LineString(coordinates);
+        multiLineStringToZoom.appendLineString(lineString);
+
+        feature.setId(route.id);
+        feature.setGeometry(lineString);
+        feature.setStyle(
+          new Style({
+            zIndex: featuresLayer.getSource().getFeatures().length,
+            stroke: new Stroke({
+              color: color,
+              width: width,
+            }),
+          })
+        );
+        featuresLayer.getSource().addFeature(feature);
+      });
+      view.fit(multiLineStringToZoom, { padding: [200, 200, 200, 200] });
+    }
+  }, [props.addFileRoutes]);
+
+  useEffect(() => {
+    if (props.removeFileRoutes) {
+      view.setZoom(zoom);
+      view.setCenter(center);
+      featuresLayer.getSource().clear();
+      featuresLayer.getSource().addFeatures(tmpFeatures);
+    }
+  }, [props.removeFileRoutes]);
+
+  useEffect(() => {
     /*
  if (props.addRoutes) {
       let lineStrings = [];

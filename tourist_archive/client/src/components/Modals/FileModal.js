@@ -28,7 +28,10 @@ const FileModal = (props) => {
         <div className="modal">
           <button
             className="modal__closeButton"
-            onClick={() => props.toggleModal()}
+            onClick={() => {
+              props.toggleModal();
+              props.removeFileRoutes();
+            }}
           >
             X
           </button>
