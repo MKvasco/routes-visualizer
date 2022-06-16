@@ -17,7 +17,8 @@
 /* Defining columns */
 
 .routeTable table > tbody > tr > :nth-child(3),
-.routeTable table > tbody > tr > :nth-child(4) {
+.routeTable table > tbody > tr > :nth-child(4),
+.routeTable table > tbody > tr > :nth-child(5) {
   width: 70px;
 }
 

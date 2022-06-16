@@ -100,13 +100,11 @@ const MapApp = (props) => {
       // Add current feature to map
       featuresLayer.getSource().addFeature(feature);
       view.fit(feature.getGeometry(), { padding: [100, 100, 100, 100] });
-      console.log(featuresLayer.getSource().getFeatures(), "SHOW");
     }
   }, [props.showRoute]);
 
   useEffect(() => {
     if (props.hideRoute) {
-      console.log(featuresLayer.getSource().getFeatures(), "HIDE");
       // Centering and zooming to previous values
       view.setCenter(center);
       view.setZoom(zoom);
@@ -174,6 +172,19 @@ const MapApp = (props) => {
       featuresLayer.getSource().removeFeature(feature);
     }
   }, [props.removeRoute]);
+
+  useEffect(() => {
+    if (props.zoomRoute) {
+      let feature = featuresLayer
+        .getSource()
+        .getFeatureById(props.zoomRoute.id);
+
+      if (feature)
+        view.fit(feature.getGeometry(), {
+          padding: [100, 100, 100, 100],
+        });
+    }
+  }, [props.zoomRoute]);
 
   useEffect(() => {
     /*

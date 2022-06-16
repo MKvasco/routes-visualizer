@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [removeRoute, setRemoveRoute] = useState(false);
   const [showRouteDetails, setShowRouteDetails] = useState(false);
   const [hideRouteDetails, setHideRouteDetails] = useState(false);
+  const [zoomRoute, setZoomRoute] = useState(false);
 
   const [fileTableData, setFileTableData] = useState([]);
   const [routeTableData, setRouteTableData] = useState([]);
@@ -162,6 +163,7 @@ const Dashboard = () => {
                 handleCheckbox(e, content, index);
               }}
               routeData={routeTableData}
+              zoomRoute={(route) => setZoomRoute(route)}
             />
             <FileTable
               toggleModal={(content) => {
@@ -180,6 +182,7 @@ const Dashboard = () => {
               showRoute={showRouteDetails}
               hideRoute={hideRouteDetails}
               showRoutes={routes}
+              zoomRoute={zoomRoute}
             />
           </div>
         </div>

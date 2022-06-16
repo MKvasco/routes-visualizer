@@ -27,6 +27,7 @@ const RouteTable = (props) => {
               <th>Modified</th>
               <th>Detail</th>
               <th>Show</th>
+              <th>Zoom</th>
             </tr>
           </thead>
           <tbody>
@@ -48,6 +49,15 @@ const RouteTable = (props) => {
                     <input
                       type="checkbox"
                       onChange={(e) => props.handleCheckbox(e, route)}
+                    />
+                  </td>
+                  <td>
+                    <img
+                      src="../../../static/images/zoom.png"
+                      alt="zoom"
+                      width="20"
+                      height="20"
+                      onClick={() => props.zoomRoute(route)}
                     />
                   </td>
                 </tr>
