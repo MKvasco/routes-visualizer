@@ -35,14 +35,29 @@ const FileModal = (props) => {
           >
             X
           </button>
-          <button
-            onClick={() => {
-              deleteFile(props.content.id);
-              props.toggleModal();
-            }}
-          >
-            Delete
-          </button>
+          <div className="modal__fileInfo">
+            <p>
+              <b>Filename: </b>
+              {props.content.file}
+            </p>
+            <p>
+              <b>Uploaded: </b>
+              {props.content.timestamp}
+            </p>
+            <p>
+              <b>User Id: </b>
+              {props.content.user}
+            </p>
+            <button
+              className="modal__file__delete"
+              onClick={() => {
+                deleteFile(props.content.id);
+                props.toggleModal();
+              }}
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </>

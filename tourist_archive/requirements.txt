@@ -5,10 +5,12 @@ djangorestframework==3.13.1
 djangorestframework-gis==1.0
 gpx-converter==2.0.0
 gpxpy==1.5.0
+lxml==4.9.0
 numpy==1.22.3
 pandas==1.4.2
 psycopg2==2.9.3
 PyJWT==2.3.0
+pykml==0.2.0
 python-dateutil==2.8.2
 python-dotenv==0.20.0
 pytz==2022.1

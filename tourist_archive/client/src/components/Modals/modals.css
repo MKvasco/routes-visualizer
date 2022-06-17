@@ -36,9 +36,49 @@
   align-items: center;
   gap: 0.5rem;
 }
+.modal__form label {
+  align-self: flex-start;
+  margin-left: 25%;
+  font-weight: 500;
+  font-size: 18px;
+}
+.modal__form input {
+  padding: 0.25rem;
+}
+.modal__form textarea {
+  height: 150px;
+  padding: 0.25rem;
+}
+
+.modal__form input,
+.modal__form textarea {
+  font-size: 16px;
+  width: 50%;
+}
+
+.modal__form button {
+  margin-top: 0.2rem;
+  padding: 0.5rem;
+  width: 50%;
+  background-color: var(--accent-color);
+  color: var(--base-color);
+  border: none;
+  border-radius: 0.2rem;
+}
+
+.modal__form button:hover {
+  transform: scale(1.02);
+  background-color: rgb(224, 224, 36);
+  color: var(--accent-color);
+  transition: ease-in-out 150ms;
+}
 
 .modal__routeInfo {
   width: 100%;
+}
+.modal__routeInfo p {
+  margin-left: 25%;
+  margin-top: 0.2rem;
 }
 
 .modal__uploadContainer {
@@ -77,4 +117,30 @@
   border-radius: 50%;
   transform: scale(0.75);
   transition: ease-in-out 150ms;
+}
+
+.modal__fileInfo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal__file__delete {
+  margin-top: 0.2rem;
+  padding: 0.5rem;
+  width: 50%;
+  background-color: var(--accent-color);
+  color: var(--base-color);
+  border: none;
+  border-radius: 0.2rem;
+}
+
+.modal__file__delete:hover {
+  transform: scale(1.02);
+  transition: ease-in-out 150ms;
+  background-color: rgb(213, 39, 39);
 }

@@ -58,7 +58,6 @@ class RouteModel(models.Model):
   title = models.CharField(max_length=16, blank=True, null=True, default="untitled")
   description = models.TextField(blank=True ,null=True, default="undescribed")
   file = models.ForeignKey(FileModel, on_delete=models.CASCADE, blank=False, null=False)
-  # TODO: check how to update modified_at after upadte
   route_width = models.IntegerField(blank=False, null=False, default=5)
   route_color = models.CharField(max_length=12, blank=False, null=False, default="#000000")
   modified_at = models.DateTimeField(auto_now_add=True)

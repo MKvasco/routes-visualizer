@@ -19,6 +19,7 @@ const MapApp = (props) => {
   const [tmpFeatures, setTmpFeatures] = useState([]);
   const [routes, setRoutes] = useState();
   const [featuresLayer, setFeaturesLayer] = useState();
+  const [multiLineFeature, setMultiLineFeature] = useState(false);
   const mapElement = useRef();
 
   useEffect(() => {
@@ -234,6 +235,7 @@ const MapApp = (props) => {
 
       let lineStrings = [];
       let multiLineFeature = new Feature();
+      setMultiLineFeature(multiLineFeature);
 
       props.visualizeAllRoutes.forEach((route) => {
         let coordinates = [];
