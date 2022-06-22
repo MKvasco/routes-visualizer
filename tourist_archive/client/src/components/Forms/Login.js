@@ -37,7 +37,7 @@ const Login = (props) => {
     }
   };
 
-  if (redirect) setTimeout(() => navigate("/dashboard"), 50);
+  if (redirect) setTimeout(() => navigate("/dashboard", { replace: true }), 25);
 
   return (
     <>

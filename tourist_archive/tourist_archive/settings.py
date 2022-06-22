@@ -138,16 +138,15 @@ REST_FRAMEWORK = {
     ]
 }
 
+
+# CORS_ALLOWED_ORIGINS = [
+    # "http://localhost:3000",
+# ]
+
 # Cors module config
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
-
 CORS_ORIGIN_ALLOW_ALL = True        # To allow all frontend ports to access app
 CORS_ALLOW_CREDENTIALS = True       # Need to be true to allow frontend receive cookies
 
 # Overriding the default django user model
 
 AUTH_USER_MODEL = 'api.UserModel'
-

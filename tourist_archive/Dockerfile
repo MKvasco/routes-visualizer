@@ -8,15 +8,14 @@ WORKDIR /app
 COPY ./requirements.txt requirements.txt
 RUN apt update --fix-missing && \
     apt upgrade -y && \
-    apt install -y netcat build-essential python3-dev libpq-dev npm gdal-bin libgdal-dev && \
-    apt install nodejs npm && \
+    apt install -y netcat build-essential python3-dev libpq-dev npm gdal-bin libgdal-dev nodejs npm && \
     pip install -r requirements.txt
 
 # copy application
-COPY . /app/
+COPY . .
 
 # Install nodejs & npm and node modules (need to check)
-WORKDIR /app/client
+WORKDIR /app/client/
 RUN npm install 
 
 WORKDIR /app

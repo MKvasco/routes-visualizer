@@ -54,7 +54,7 @@ const Upload = (props) => {
               </p>
               <p>
                 <b>Last Modified:</b>{" "}
-                {file.lastModifiedDate.toLocaleDateString()}
+                {new Date(file.lastModified).toLocaleDateString()}
               </p>
               <button className="button" onClick={(e) => postFile(e)}>
                 Upload GPS file
