@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',                        # calling cors middleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -56,7 +57,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',                        # calling cors middleware
 ]
 
 ROOT_URLCONF = 'tourist_archive.urls'
@@ -138,14 +138,20 @@ REST_FRAMEWORK = {
     ]
 }
 
-
-# CORS_ALLOWED_ORIGINS = [
-    # "http://localhost:3000",
-# ]
-
 # Cors module config
-CORS_ORIGIN_ALLOW_ALL = True        # To allow all frontend ports to access app
+CORS_ALLOW_ALL_ORIGINS = True       # To allow all frontend ports to access app
 CORS_ALLOW_CREDENTIALS = True       # Need to be true to allow frontend receive cookies
+CORS_ALLOW_HEADERS = [              # To allow request from docker
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
 # Overriding the default django user model
 

@@ -1,6 +1,9 @@
 FROM python:3.9-slim
 LABEL sk.stuba.fei="MarcoKvasnica@pm.me"
 
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE 1
+
 # setting work directory
 WORKDIR /app
 
@@ -22,11 +25,3 @@ WORKDIR /app
 
 # expose port 
 EXPOSE 8000
-
-
-
-
-
-
-
-

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Map, View, Feature } from "ol";
 import { LineString, MultiLineString } from "ol/geom";
 import { fromLonLat } from "ol/proj";
-import OSM from "ol/source/OSM";
+import XYZ from "ol/source/XYZ";
 import TileLayer from "ol/layer/Tile";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
@@ -38,7 +38,9 @@ const MapApp = (props) => {
       target: mapElement.current,
       layers: [
         new TileLayer({
-          source: new OSM(),
+          source: new XYZ({
+            url: "http://localhost:8080/tile/{z}/{x}/{y}.png",
+          }),
         }),
         initFeaturesLayer,
       ],

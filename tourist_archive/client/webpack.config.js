@@ -9,16 +9,18 @@ module.exports = {
   },
   module: {
     rules: [
-      { // Packing .js files into static/frontend/main.js
+      {
+        // Packing .js files into static/frontend/main.js
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
         },
       },
-      { // Packing .css files into static/frontend/main.js
+      {
+        // Packing .css files into static/frontend/main.js
         test: /\.css$/,
-        use : [{ loader: "style-loader"}, { loader: "css-loader"}]
+        use: [{ loader: "style-loader" }, { loader: "css-loader" }],
       },
     ],
   },
@@ -27,7 +29,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV" : JSON.stringify("development"),
+      "process.env.NODE_ENV": JSON.stringify("production"),
     }),
   ],
 };
